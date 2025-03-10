@@ -25,5 +25,13 @@ export const config = async () => {
       user: process.env.SWAGGER_USER,
       password: process.env.SWAGGER_PASSWORD,
     },
+    db: {
+      type: process.env.DB_TYPE,
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT as string),
+      database: process.env.DB_DATABASE,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+    },
   };
 };
