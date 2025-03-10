@@ -57,7 +57,7 @@ async function bootstrap() {
     }),
   );
   app.use(
-    '/docs/swagger-ui',
+    '/docs',
     express.static(join(__dirname, '../node_modules/swagger-ui-dist')),
   );
   await app.listen(configService.get<number>('APP_PORT') || 3000);
