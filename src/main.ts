@@ -7,6 +7,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import * as bodyParser from 'body-parser';
+import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: false });
@@ -53,6 +55,10 @@ async function bootstrap() {
     helmet({
       contentSecurityPolicy: false,
     }),
+  );
+  app.use(
+    '/docs/swagger-ui',
+    express.static(join(__dirname, '../node_modules/swagger-ui-dist')),
   );
   await app.listen(configService.get<number>('APP_PORT') || 3000);
 }
