@@ -12,9 +12,40 @@ export class User {
   id: string;
 
   @Column('varchar', {
-    length: 255,
+    length: 50,
+    nullable: false,
   })
-  fullName: string;
+  firstName: string;
+
+  @Column('varchar', {
+    length: 50,
+    nullable: false,
+  })
+  lastName: string;
+
+  @Column('varchar', {
+    length: 10,
+    nullable: false,
+  })
+  role: string;
+
+  @Column('varchar', {
+    length: 255,
+    nullable: false,
+  })
+  email: string;
+
+  @Column('varchar', {
+    length: 255,
+    nullable: false,
+  })
+  password: string;
+
+  @Column('varchar', {
+    length: 25,
+    nullable: false,
+  })
+  username: string;
 
   @CreateDateColumn({
     type: 'timestamp',
