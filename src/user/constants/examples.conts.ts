@@ -1,0 +1,48 @@
+export const GET_ALL_USER_EXAMPLE = {
+  users: [
+    {
+      id: 'd423cb14-3687-48a6-914e-b35d523c19a7',
+      firstName: 'Jheferson',
+      lastName: 'Checa',
+      role: 'Admin',
+      email: 'jheferson@gmail.com',
+      password: '123456',
+      username: 'Jheff',
+      createdAt: '2025-03-11T08:09:04.363Z',
+      updatedAt: '2025-03-11T08:09:04.363Z',
+    },
+    {
+      id: 'd088a22f-2628-40b3-aefa-2552e7da54bf',
+      firstName: 'Jheferson 3',
+      lastName: 'Checa 3',
+      role: 'Admin',
+      email: 'jheferson3@gmail.com',
+      password: '123456',
+      username: 'Jheff 3',
+      createdAt: '2025-03-11T08:23:30.015Z',
+      updatedAt: '2025-03-11T08:23:30.015Z',
+    },
+    {
+      id: '78201ed3-098f-4db2-89d1-88551dfe2fc8',
+      firstName: 'Jheferson 2',
+      lastName: 'Checa 2',
+      role: 'Admin',
+      email: 'jheferson2@gmail.com',
+      password: '123456',
+      username: 'Jheff',
+      createdAt: '2025-03-11T08:23:10.662Z',
+      updatedAt: '2025-03-11T08:23:10.662Z',
+    },
+  ],
+};
+export const GET_USER_EXAMPLE = {
+  id: '78201ed3-098f-4db2-89d1-88551dfe2fc8',
+  firstName: 'Jheferson 2',
+  lastName: 'Checa 2',
+  role: 'Admin',
+  email: 'jheferson2@gmail.com',
+  password: '123456',
+  username: 'Jheff',
+  createdAt: '2025-03-11T08:23:10.662Z',
+  updatedAt: '2025-03-11T08:23:10.662Z',
+};
