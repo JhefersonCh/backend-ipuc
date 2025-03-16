@@ -33,3 +33,20 @@ export class RefreshTokenBodyDto {
   @IsNotEmpty()
   refreshToken: string;
 }
+
+export class SignOutBodyDto {
+  @ApiProperty({
+    example: '7985544c-4659-49f3-8d1c-42602a1c765b',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+  @ApiProperty({
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  accessToken: string;
+}

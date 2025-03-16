@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../services/auth/auth.service';
-import { LoginDto, RefreshTokenBodyDto } from '../dtos/auth.dto';
+import {
+  LoginDto,
+  RefreshTokenBodyDto,
+  SignOutBodyDto,
+} from '../dtos/auth.dto';
 
 @Injectable()
 export class AuthUC {
@@ -12,5 +16,9 @@ export class AuthUC {
 
   async refreshToken(body: RefreshTokenBodyDto) {
     return this.authService.refreshToken(body);
+  }
+
+  async signOut(body: SignOutBodyDto) {
+    return this.authService.signOut(body);
   }
 }

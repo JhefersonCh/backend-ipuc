@@ -1,4 +1,4 @@
-import { RefreshTokenBodyDto } from './../../dtos/auth.dto';
+import { RefreshTokenBodyDto, SignOutBodyDto } from './../../dtos/auth.dto';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   TokenPayloadModel,
@@ -83,7 +83,7 @@ export class AuthService {
         secret: this.configService.get<string>('jwt.secret'),
       });
     } catch (_e) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
 
     const user = await this.validateSession({
@@ -92,7 +92,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No autorizado');
     }
     const tokens = this.generateTokens({
       username: user.username,
@@ -107,5 +107,9 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  async signOut(body: SignOutBodyDto) {
+    return;
   }
 }

@@ -1,3 +1,5 @@
+import { UserService } from './../user/services/user/user.service';
+import { AuthService } from './../auth/services/auth/auth.service';
 import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -5,6 +7,7 @@ import { User } from './entities/user.entity';
 import { UserRepository } from './repositories/user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({})
 export class SharedModule {
@@ -38,7 +41,7 @@ export class SharedModule {
           defaultStrategy: 'jwt',
         }),
       ],
-      providers: [UserRepository],
+      providers: [UserRepository, JwtStrategy, AuthService, UserService],
       exports: [],
     };
   }

@@ -9,6 +9,7 @@ import helmet from 'helmet';
 import * as bodyParser from 'body-parser';
 import { join } from 'path';
 import * as express from 'express';
+import { LoggingInterceptor } from './shared/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: false });
@@ -41,7 +42,11 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new ClassSerializerInterceptor(app.get(Reflector)),
+  );
   const allowedHeaders = configService.get('app.cors.allowedHeaders');
   const allowedMethods = configService.get('app.cors.allowedMethods');
 
