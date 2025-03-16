@@ -1,12 +1,15 @@
 import {
   LoginDto,
   RefreshTokenBodyDto,
+  RefreshTokenResponseDto,
+  SignInResponseDto,
   SignOutBodyDto,
 } from './../../dtos/auth.dto';
 import { AuthUC } from '../../useCases/auth.UC';
 import {
   Body,
   Controller,
+  HttpStatus,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -22,18 +25,29 @@ import { AuthGuard } from '@nestjs/passport';
 export class AuthController {
   constructor(private readonly authUC: AuthUC) {}
 
-  @Post('login')
-  @ApiOkResponse()
+  @Post('sign-in')
+  @ApiOkResponse({ type: SignInResponseDto })
   @ApiUnauthorizedResponse({ type: UnauthorizedException })
-  async login(@Body() user: LoginDto) {
-    return await this.authUC.login(user);
+  async signIn(@Body() user: LoginDto): Promise<SignInResponseDto> {
+    const data = await this.authUC.login(user);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Bienvenid@',
+      data,
+    };
   }
 
   @Post('refresh-token')
-  @ApiOkResponse()
+  @ApiOkResponse({ type: RefreshTokenResponseDto })
   @ApiUnauthorizedResponse({ type: UnauthorizedException })
-  async refreshToken(@Body() body: RefreshTokenBodyDto) {
-    return await this.authUC.refreshToken(body);
+  async refreshToken(
+    @Body() body: RefreshTokenBodyDto,
+  ): Promise<RefreshTokenResponseDto> {
+    const data = await this.authUC.refreshToken(body);
+    return {
+      statusCode: HttpStatus.OK,
+      data,
+    };
   }
 
   @Post('sign-out')

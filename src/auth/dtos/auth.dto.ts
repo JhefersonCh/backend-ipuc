@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
@@ -49,4 +51,65 @@ export class SignOutBodyDto {
   @IsString()
   @IsNotEmpty()
   accessToken: string;
+}
+
+export interface SignInResponse {
+  tokens: { accessToken: string; refreshToken: string };
+  user: { id: string; role: string };
+}
+
+export class SignInResponseDto implements BaseResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+
+  @ApiProperty({
+    type: String,
+    example: 'Bienvenid@',
+  })
+  message: string;
+
+  @ApiProperty({
+    type: Object,
+    example: {
+      tokens: {
+        accessToken:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpoZWZmIiwic3ViIjoiNTNlYzI3NjYtZWE5NS00ZGFiLWFkOWEtZDFjYmY1Y2EzY2JlIiwiaWQiOiI1M2VjMjc2Ni1lYTk1LTRkYWItYWQ5YS1kMWNiZjVjYTNjYmUiLCJpYXQiOjE3NDIxNjQxODUsImV4cCI6MTc0MjIwMDE4NX0.4YGuGi6jiH9NCpQIsZV6RTQxuQ9Sg57sphciWAWkIsY',
+        refreshToken:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpoZWZmIiwic3ViIjoiNTNlYzI3NjYtZWE5NS00ZGFiLWFkOWEtZDFjYmY1Y2EzY2JlIiwiaWQiOiI1M2VjMjc2Ni1lYTk1LTRkYWItYWQ5YS1kMWNiZjVjYTNjYmUiLCJpYXQiOjE3NDIxNjQxODUsImV4cCI6MTc0Mjc2ODk4NX0.Ow3FAW_pm60V4qf73aA8JN4P0qJCqDTJ7EEOQX5VeYQ',
+      },
+      user: {
+        id: '53ec2766-ea95-4dab-ad9a-d1cbf5ca3cbe',
+        role: 'user',
+      },
+    },
+  })
+  data: SignInResponse;
+}
+
+export class RefreshTokenResponseDto implements BaseResponseDto {
+  @ApiProperty({
+    type: Number,
+    example: HttpStatus.OK,
+  })
+  statusCode: number;
+
+  @ApiProperty({
+    type: Object,
+    example: {
+      tokens: {
+        accessToken:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpoZWZmIiwic3ViIjoiNTNlYzI3NjYtZWE5NS00ZGFiLWFkOWEtZDFjYmY1Y2EzY2JlIiwiaWQiOiI1M2VjMjc2Ni1lYTk1LTRkYWItYWQ5YS1kMWNiZjVjYTNjYmUiLCJpYXQiOjE3NDIxNjQxODUsImV4cCI6MTc0MjIwMDE4NX0.4YGuGi6jiH9NCpQIsZV6RTQxuQ9Sg57sphciWAWkIsY',
+        refreshToken:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpoZWZmIiwic3ViIjoiNTNlYzI3NjYtZWE5NS00ZGFiLWFkOWEtZDFjYmY1Y2EzY2JlIiwiaWQiOiI1M2VjMjc2Ni1lYTk1LTRkYWItYWQ5YS1kMWNiZjVjYTNjYmUiLCJpYXQiOjE3NDIxNjQxODUsImV4cCI6MTc0Mjc2ODk4NX0.Ow3FAW_pm60V4qf73aA8JN4P0qJCqDTJ7EEOQX5VeYQ',
+      },
+      user: {
+        id: '53ec2766-ea95-4dab-ad9a-d1cbf5ca3cbe',
+        role: 'user',
+      },
+    },
+  })
+  data: SignInResponse;
 }
