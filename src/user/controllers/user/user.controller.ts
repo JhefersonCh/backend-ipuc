@@ -4,6 +4,7 @@ import {
   NotFoundResponseDto,
 } from './../../../shared/dtos/response.dto';
 import {
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -17,7 +18,17 @@ import {
 } from './../../dtos/user.dto';
 
 import { UserUC } from './../../useCases/user.uc';
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 @ApiTags('Usuarios')
@@ -48,17 +59,6 @@ export class UserController {
     };
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: GetUserDto })
-  @ApiNotFoundResponse({ type: NotFoundResponseDto })
-  async findOne(@Param('id') id: string): Promise<GetUserDto> {
-    const user = await this.userUC.findOne(id);
-    return {
-      statusCode: HttpStatus.OK,
-      data: user,
-    };
-  }
-
   @Post('register')
   @ApiOkResponse({ type: CreatedRecordResponseDto })
   @ApiConflictResponse({ type: DuplicatedResponseDto })
@@ -68,6 +68,29 @@ export class UserController {
       message: 'Registro exitoso',
       statusCode: HttpStatus.CREATED,
       data: rowId,
+    };
+  }
+
+  @Get('init-data')
+  @ApiOkResponse()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async initData(@Req() req) {
+    const initData = await this.userUC.initData(req.user.id);
+    return {
+      statusCode: HttpStatus.OK,
+      data: initData,
+    };
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ type: GetUserDto })
+  @ApiNotFoundResponse({ type: NotFoundResponseDto })
+  async findOne(@Param('id') id: string): Promise<GetUserDto> {
+    const user = await this.userUC.findOne(id);
+    return {
+      statusCode: HttpStatus.OK,
+      data: user,
     };
   }
 }

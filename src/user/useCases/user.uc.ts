@@ -22,4 +22,8 @@ export class UserUC {
   async findOne(id: string) {
     return await this.userService.findOne(id);
   }
+
+  async initData(userId: string) {
+    return await this.userService.initData(userId);
+  }
 }

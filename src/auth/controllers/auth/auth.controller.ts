@@ -58,4 +58,6 @@ export class AuthController {
   async signOut(@Body() body: SignOutBodyDto) {
     return await this.authUC.signOut(body);
   }
+
+  
 }

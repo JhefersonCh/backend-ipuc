@@ -82,4 +82,17 @@ export class UserService {
       );
     }
   }
+
+  async initData(userId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
+    }
+    return user;
+  }
 }
