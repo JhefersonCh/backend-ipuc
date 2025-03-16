@@ -12,7 +12,8 @@ import {
 import {
   GetAllUsersResposeDto,
   GetUserDto,
-  UserDto,
+  BaseUserDto,
+  CreateOrUpdateUserDto,
 } from './../../dtos/user.dto';
 
 import { UserUC } from './../../useCases/user.uc';
@@ -36,7 +37,9 @@ export class UserController {
   @Post()
   @ApiOkResponse({ type: CreatedRecordResponseDto })
   @ApiConflictResponse({ type: DuplicatedResponseDto })
-  async create(@Body() user: UserDto): Promise<CreatedRecordResponseDto> {
+  async create(
+    @Body() user: CreateOrUpdateUserDto,
+  ): Promise<CreatedRecordResponseDto> {
     const rowId = await this.userUC.create(user);
     return {
       message: 'Usuario creado correctamente',
@@ -53,6 +56,18 @@ export class UserController {
     return {
       statusCode: HttpStatus.OK,
       data: user,
+    };
+  }
+
+  @Post('register')
+  @ApiOkResponse({ type: CreatedRecordResponseDto })
+  @ApiConflictResponse({ type: DuplicatedResponseDto })
+  async register(@Body() user: BaseUserDto): Promise<CreatedRecordResponseDto> {
+    const rowId = await this.userUC.register(user);
+    return {
+      message: 'Registro exitoso',
+      statusCode: HttpStatus.CREATED,
+      data: rowId,
     };
   }
 }
