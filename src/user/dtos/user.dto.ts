@@ -6,7 +6,7 @@ import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
 import { HttpStatus } from '@nestjs/common';
 import { GET_ALL_USER_EXAMPLE } from '../constants/examples.conts';
 
-export class UserDto {
+export class BaseUserDto {
   @ApiProperty({
     example: 'uuid',
     required: true,
@@ -48,19 +48,27 @@ export class UserDto {
   username: string;
 
   @ApiProperty({
-    example: 'Admin',
-    required: true,
+    example: '123456',
   })
   @IsString()
-  @IsNotEmpty({ message: 'El rol es requerido' })
-  role: string;
+  @IsNotEmpty({ message: 'La contraseña es requerida' })
+  password: string;
 
   @ApiProperty({
     example: '123456',
   })
   @IsString()
-  @IsNotEmpty({ message: 'La contraseña es requerido' })
-  password: string;
+  @IsNotEmpty({ message: 'La confirmación de contraseña es requerida' })
+  confirmPassword: string;
+}
+
+export class CreateOrUpdateUserDto extends BaseUserDto {
+  @ApiProperty({
+    example: 'admin',
+  })
+  @IsString()
+  @IsNotEmpty({ message: 'El rol es requerido' })
+  role: string;
 }
 
 export interface GetAllUsersRespose {
