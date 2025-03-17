@@ -26,4 +26,8 @@ export class UserUC {
   async initData(userId: string) {
     return await this.userService.initData(userId);
   }
+
+  async delete(id: string) {
+    return await this.userService.delete(id);
+  }
 }

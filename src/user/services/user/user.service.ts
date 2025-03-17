@@ -95,4 +95,9 @@ export class UserService {
     }
     return user;
   }
+
+  async delete(id: string) {
+    await this.findOne(id);
+    return await this.userRepository.delete(id);
+  }
 }
