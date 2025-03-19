@@ -18,10 +18,12 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
+@ApiTags('Autenticación')
 export class AuthController {
   constructor(private readonly authUC: AuthUC) {}
 
@@ -58,6 +60,4 @@ export class AuthController {
   async signOut(@Body() body: SignOutBodyDto) {
     return await this.authUC.signOut(body);
   }
-
-  
 }
