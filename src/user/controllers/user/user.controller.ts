@@ -1,5 +1,6 @@
 import {
   CreatedRecordResponseDto,
+  DeleteReCordResponseDto,
   DuplicatedResponseDto,
   NotFoundResponseDto,
 } from './../../../shared/dtos/response.dto';
@@ -21,6 +22,7 @@ import { UserUC } from './../../useCases/user.uc';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -36,6 +38,8 @@ export class UserController {
   constructor(private readonly userUC: UserUC) {}
 
   @Get()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOkResponse({ type: GetAllUsersResposeDto })
   async findAll(): Promise<GetAllUsersResposeDto> {
     const users = await this.userUC.findAll();
@@ -46,6 +50,8 @@ export class UserController {
   }
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOkResponse({ type: CreatedRecordResponseDto })
   @ApiConflictResponse({ type: DuplicatedResponseDto })
   async create(
@@ -84,6 +90,8 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   @ApiOkResponse({ type: GetUserDto })
   @ApiNotFoundResponse({ type: NotFoundResponseDto })
   async findOne(@Param('id') id: string): Promise<GetUserDto> {
@@ -91,6 +99,19 @@ export class UserController {
     return {
       statusCode: HttpStatus.OK,
       data: user,
+    };
+  }
+
+  @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({ type: DeleteReCordResponseDto })
+  @ApiNotFoundResponse({ type: NotFoundResponseDto })
+  async delete(@Param('id') id: string): Promise<DeleteReCordResponseDto> {
+    await this.userUC.delete(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Usuario eliminado exitosamente',
     };
   }
 }

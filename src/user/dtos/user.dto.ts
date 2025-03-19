@@ -100,3 +100,10 @@ export class GetUserDto implements BaseResponseDto {
   })
   data: User;
 }
+
+// export class DeleteUserResponseDto implements BaseResponseDto {
+//   @ApiProperty({
+//     example: HttpStatus.OK,
+// })
+// statusCode: number;
+// }
