@@ -1,8 +1,15 @@
 import { User } from './../../../shared/entities/user.entity';
 import { UserModel } from './../../models/user.model';
 import { UserRepository } from './../../../shared/repositories/user.repository';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { ChangePasswordDto } from 'src/user/dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -94,6 +101,71 @@ export class UserService {
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
     return user;
+  }
+
+  async update(id: string, userData: Partial<UserModel>) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Validar si se está cambiando el email o username
+    if (userData.email && userData.email !== user.email) {
+      const emailExists = await this.userRepository.findOne({
+        where: { email: userData.email },
+      });
+      if (emailExists) {
+        throw new BadRequestException(
+          'El email ya está en uso por otro usuario',
+        );
+      }
+    }
+
+    if (userData.username && userData.username !== user.username) {
+      const usernameExists = await this.userRepository.findOne({
+        where: { username: userData.username },
+      });
+      if (usernameExists) {
+        throw new BadRequestException(
+          'El username ya está en uso por otro usuario',
+        );
+      }
+    }
+
+    Object.assign(user, userData);
+    return await this.userRepository.update(user?.id || id, userData);
+  }
+
+  async changePassword(userId: string, body: ChangePasswordDto) {
+    const { currentPassword, newPassword } = body;
+
+    // 🔍 1️⃣ Buscar el usuario en la base de datos
+    const user = await this.findByParams({ id: userId });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // 🔑 2️⃣ Verificar si la contraseña actual es correcta
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('La contraseña actual es incorrecta');
+    }
+
+    // ❌ 3️⃣ Evitar que el usuario use la misma contraseña anterior
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      throw new BadRequestException(
+        'La nueva contraseña no puede ser igual a la anterior',
+      );
+    }
+
+    // 🔐 4️⃣ Encriptar la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 💾 5️⃣ Guardar la nueva contraseña en la base de datos
+    await this.userRepository.update(userId, { password: hashedPassword });
+
+    return { message: 'Contraseña actualizada correctamente' };
   }
 
   async delete(id: string) {

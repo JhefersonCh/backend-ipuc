@@ -6,9 +6,15 @@ import {
 } from '../../models/authentication.model';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './../../../user/services/user/user.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { UserRepository } from 'src/shared/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +22,7 @@ export class AuthService {
     private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async signIn(credentials: Partial<UserAuthModel>) {

@@ -3,6 +3,7 @@ import {
   DeleteReCordResponseDto,
   DuplicatedResponseDto,
   NotFoundResponseDto,
+  UpdateRecordResponseDto,
 } from './../../../shared/dtos/response.dto';
 import {
   ApiBearerAuth,
@@ -16,6 +17,8 @@ import {
   GetUserDto,
   BaseUserDto,
   CreateOrUpdateUserDto,
+  UpdateUserDto,
+  ChangePasswordDto,
 } from './../../dtos/user.dto';
 
 import { UserUC } from './../../useCases/user.uc';
@@ -26,8 +29,10 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -36,6 +41,21 @@ import { AuthGuard } from '@nestjs/passport';
 @ApiTags('Usuarios')
 export class UserController {
   constructor(private readonly userUC: UserUC) {}
+
+  @Patch('change-password')
+  @ApiOkResponse({ description: 'Contraseña actualizada correctamente' })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
+    console.log('holaaaa');
+
+    const userId = req.user.id;
+    await this.userUC.changePassword(userId, body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Contraseña actualizada correctamente',
+    };
+  }
 
   @Get()
   @ApiBearerAuth()
@@ -99,6 +119,23 @@ export class UserController {
     return {
       statusCode: HttpStatus.OK,
       data: user,
+    };
+  }
+
+  @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
+  @ApiNotFoundResponse({ type: NotFoundResponseDto })
+  async update(
+    @Param('id') id: string,
+    @Body() userData: UpdateUserDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.userUC.update(id, userData);
+
+    return {
+      message: 'Usuario actualizado correctamente',
+      statusCode: HttpStatus.OK,
     };
   }
 

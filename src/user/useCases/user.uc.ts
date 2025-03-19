@@ -1,5 +1,6 @@
-import { CreateOrUpdateUserDto } from '../dtos/user.dto';
+import { ChangePasswordDto, CreateOrUpdateUserDto } from '../dtos/user.dto';
 import { BaseUserDto } from '../dtos/user.dto';
+import { UserModel } from '../models/user.model';
 import { UserService } from './../services/user/user.service';
 import { Injectable } from '@nestjs/common';
 
@@ -25,6 +26,14 @@ export class UserUC {
 
   async initData(userId: string) {
     return await this.userService.initData(userId);
+  }
+
+  async update(id: string, userData: UserModel) {
+    return await this.userService.update(id, userData);
+  }
+
+  async changePassword(userId: string, body: ChangePasswordDto) {
+    return await this.userService.changePassword(userId, body);
   }
 
   async delete(id: string) {
