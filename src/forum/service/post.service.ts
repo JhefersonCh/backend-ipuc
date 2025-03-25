@@ -81,11 +81,12 @@ export class PostService {
       id: post.post_id,
       title: post.post_title,
       description: post.post_description,
-      commentscount: Number(post.commentscount) || 0,
-      likescount: Number(post.likescount) || 0,
+      commentsCount: Number(post.commentscount) || 0,
+      likesCount: Number(post.likescount) || 0,
       hasLiked: post.hasliked,
       createdAt: post.post_createdAt,
       updatedAt: post.post_updatedAt,
+      userId: post.post_userId,
     }));
   }
 

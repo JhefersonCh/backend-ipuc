@@ -1,0 +1,35 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { LikeUseCase } from '../useCases/like.uc';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { LikeDto } from '../dto/like.dto';
+
+@Controller('like')
+@Controller('Me gusta')
+export class LikeController {
+  constructor(private readonly likeUseCase: LikeUseCase) {}
+
+  @Post()
+  @ApiOkResponse()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async like(@Body() body: LikeDto) {
+    return await this.likeUseCase.create(body);
+  }
+
+  @Delete(':postId')
+  @ApiOkResponse()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async delete(@Param('postId') postId: string, @Req() req) {
+    return await this.likeUseCase.delete(postId, req.user.id);
+  }
+}
