@@ -21,8 +21,8 @@ export class LikeController {
   @ApiOkResponse()
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  async like(@Body() body: LikeDto) {
-    return await this.likeUseCase.create(body);
+  async like(@Body() body: LikeDto, @Req() req) {
+    return await this.likeUseCase.create(body, req.user.id);
   }
 
   @Delete(':postId')

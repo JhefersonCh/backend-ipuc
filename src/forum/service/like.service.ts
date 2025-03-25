@@ -6,8 +6,9 @@ import { LikeDto } from '../dto/like.dto';
 export class LikeService {
   constructor(private readonly likeRepository: LikeRepository) {}
 
-  async create(data: LikeDto) {
-    return await this.likeRepository.save(data);
+  async create(data: LikeDto, userId: string) {
+    const likeBody = { ...data, userId };
+    return await this.likeRepository.save(likeBody);
   }
 
   async delete(postId: string, userId: string) {

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LikeDto {
   @ApiProperty({
@@ -6,12 +7,7 @@ export class LikeDto {
     description: 'ID del post',
     required: true,
   })
+  @IsNotEmpty({ message: 'El ID del post es requerido' })
+  @IsString()
   postId: string;
-
-  @ApiProperty({
-    example: 'uuid',
-    description: 'ID del usuario',
-    required: true,
-  })
-  userId: string;
 }
