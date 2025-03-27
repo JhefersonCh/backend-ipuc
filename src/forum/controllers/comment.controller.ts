@@ -1,4 +1,9 @@
 import {
+  CreatedRecordResponseDto,
+  DeleteReCordResponseDto,
+  NotFoundResponseDto,
+} from './../../shared/dtos/response.dto';
+import {
   Body,
   Controller,
   Delete,
@@ -20,12 +25,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  CreatedRecordResponseDto,
-  DeleteReCordResponseDto,
-  NotFoundResponseDto,
-} from 'src/shared/dtos/response.dto';
-import { CommentUseCase } from '../useCases/comment-uc';
+import { CommentUseCase } from '../useCases/comment.uc';
 
 @Controller('comment')
 @Controller('Comentarios')

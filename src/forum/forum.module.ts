@@ -1,3 +1,4 @@
+import { CommentRepository } from './../shared/repositories/comment.repository';
 import { LikeRepository } from './../shared/repositories/like.repository';
 import { SharedModule } from 'src/shared/shared.module';
 import { UserRepository } from './../shared/repositories/user.repository';
@@ -12,9 +13,8 @@ import { LikeController } from './controllers/like.controller';
 import { CommentController } from './controllers/comment.controller';
 import { LikeUseCase } from './useCases/like.uc';
 import { LikeService } from './service/like.service';
-import { CommentUseCase } from './useCases/comment-uc';
+import { CommentUseCase } from './useCases/comment.uc';
 import { CommentService } from './service/comment.service';
-import { CommentRepository } from 'src/shared/repositories/comment.repository';
 
 @Module({
   imports: [

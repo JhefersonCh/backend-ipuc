@@ -1,3 +1,4 @@
+import { CommentRepository } from './../../shared/repositories/comment.repository';
 import {
   ForbiddenException,
   Injectable,
@@ -6,7 +7,6 @@ import {
 import { CommentService } from '../service/comment.service';
 import { CommentDto } from '../dto/comment.dto';
 import { CommentModel } from '../models/commet.model';
-import { CommentRepository } from 'src/shared/repositories/comment.repository';
 
 @Injectable()
 export class CommentUseCase {
