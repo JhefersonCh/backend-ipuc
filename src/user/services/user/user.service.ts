@@ -139,19 +139,16 @@ export class UserService {
   async changePassword(userId: string, body: ChangePasswordDto) {
     const { currentPassword, newPassword } = body;
 
-    // 🔍 1️⃣ Buscar el usuario en la base de datos
     const user = await this.findByParams({ id: userId });
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    // 🔑 2️⃣ Verificar si la contraseña actual es correcta
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       throw new BadRequestException('La contraseña actual es incorrecta');
     }
 
-    // ❌ 3️⃣ Evitar que el usuario use la misma contraseña anterior
     const isSamePassword = await bcrypt.compare(newPassword, user.password);
     if (isSamePassword) {
       throw new BadRequestException(
@@ -159,10 +156,8 @@ export class UserService {
       );
     }
 
-    // 🔐 4️⃣ Encriptar la nueva contraseña
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // 💾 5️⃣ Guardar la nueva contraseña en la base de datos
     await this.userRepository.update(userId, { password: hashedPassword });
 
     return { message: 'Contraseña actualizada correctamente' };

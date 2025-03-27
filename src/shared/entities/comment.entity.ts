@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Post } from './post.entity';
@@ -60,4 +61,8 @@ export class Comment {
     type: 'timestamp',
   })
   createdAt?: Date;
+  @UpdateDateColumn({
+    type: 'timestamp',
+  })
+  updatedAt?: Date;
 }

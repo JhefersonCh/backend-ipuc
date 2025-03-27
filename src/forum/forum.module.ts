@@ -9,9 +9,12 @@ import { PostService } from './service/post.service';
 import { PostUseCase } from './useCases/post.uc';
 import { PassportModule } from '@nestjs/passport';
 import { LikeController } from './controllers/like.controller';
-import { CommentController } from './controllers/commet.controller';
+import { CommentController } from './controllers/comment.controller';
 import { LikeUseCase } from './useCases/like.uc';
 import { LikeService } from './service/like.service';
+import { CommentUseCase } from './useCases/comment-uc';
+import { CommentService } from './service/comment.service';
+import { CommentRepository } from 'src/shared/repositories/comment.repository';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { LikeService } from './service/like.service';
     PostRepository,
     UserService,
     UserRepository,
+    CommentUseCase,
+    CommentService,
+    CommentRepository,
   ],
 })
 export class ForumModule {}

@@ -2,13 +2,7 @@ import { User } from './../../shared/entities/user.entity';
 import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { NOT_EMPTY_MESSAGE_ID } from './../../shared/constants/validator-messages.const';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsEmail,
-  IsNotEmpty,
-  MinLength,
-  MaxLength,
-} from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
 import { HttpStatus } from '@nestjs/common';
 import { GET_ALL_USER_EXAMPLE } from '../constants/examples.conts';
 
@@ -147,10 +141,6 @@ export class ChangePasswordDto {
     required: true,
   })
   @IsString()
-  @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
-  @MaxLength(50, {
-    message: 'La contraseña no puede superar los 50 caracteres',
-  })
   currentPassword: string;
 
   @ApiProperty({
@@ -158,11 +148,5 @@ export class ChangePasswordDto {
     required: true,
   })
   @IsString()
-  @MinLength(6, {
-    message: 'La nueva contraseña debe tener al menos 6 caracteres',
-  })
-  @MaxLength(50, {
-    message: 'La nueva contraseña no puede superar los 50 caracteres',
-  })
   newPassword: string;
 }
