@@ -1,7 +1,9 @@
+import { GetCommentByIdResponseDto } from './../dto/comment.dto';
 import {
   CreatedRecordResponseDto,
   DeleteReCordResponseDto,
   NotFoundResponseDto,
+  UpdateRecordResponseDto,
 } from './../../shared/dtos/response.dto';
 import {
   Body,
@@ -15,9 +17,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CommentService } from '../service/comment.service';
-import { CommentDto } from '../dto/comment.dto';
-import { CommentModel } from '../models/commet.model';
+import { CommentDto, UpdateCommentDto } from '../dto/comment.dto';
+
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -28,12 +29,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { CommentUseCase } from '../useCases/comment.uc';
 
 @Controller('comment')
-@Controller('Comentarios')
 export class CommentController {
-  constructor(
-    private readonly commentService: CommentService,
-    private readonly commentUC: CommentUseCase,
-  ) {}
+  constructor(private readonly commentUC: CommentUseCase) {}
 
   @Post()
   @ApiOkResponse({ type: CreatedRecordResponseDto })
@@ -43,35 +40,38 @@ export class CommentController {
   async create(
     @Body() commentDto: CommentDto,
     @Req() req,
-  ): Promise<{ statusCode: number; message: string; data: CommentModel }> {
-    const data = await this.commentUC.createComment({
+  ): Promise<CreatedRecordResponseDto> {
+    const data = await this.commentUC.create({
       ...commentDto,
       userId: req.user.id,
     });
     return {
-      statusCode: HttpStatus.OK,
+      statusCode: HttpStatus.CREATED,
       message: 'Comentario creado correctamente',
-      data,
+      data: { rowId: data.id },
     };
   }
 
   @Get(':id')
-  @ApiOkResponse({ type: CommentDto })
+  @ApiOkResponse({ type: GetCommentByIdResponseDto })
   @ApiNotFoundResponse({ type: NotFoundResponseDto })
-  @ApiParam({ name: 'id', required: true, description: 'ID del comentario' })
-  async findOne(@Param('id') id: string): Promise<CommentDto> {
-    return this.commentUC.getCommentById(id);
+  async findOne(@Param('id') id: string): Promise<GetCommentByIdResponseDto> {
+    const data = await this.commentUC.get(id);
+    return {
+      data,
+      statusCode: HttpStatus.OK,
+    };
   }
 
-  @Get('post/:postId')
-  @ApiOkResponse({ type: CommentDto })
+  @Get('comment/:postId')
+  @ApiOkResponse({ type: [CommentDto] })
   @ApiParam({ name: 'postId', required: true, description: 'ID del post' })
-  async findByPost(@Param('postId') postId: string): Promise<CommentModel[]> {
-    return this.commentUC.getCommentsByPost(postId);
+  async findByPost(@Param('postId') postId: string): Promise<CommentDto[]> {
+    return await this.commentUC.getPost(postId);
   }
 
   @Get('parent/:parentId')
-  @ApiOkResponse({ type: CommentDto })
+  @ApiOkResponse({ type: [CommentDto] })
   @ApiParam({
     name: 'parentId',
     required: true,
@@ -79,25 +79,25 @@ export class CommentController {
   })
   async findReplies(
     @Param('parentId') parentId: string,
-  ): Promise<CommentModel[]> {
-    return this.commentUC.getRepliesByComment(parentId);
+  ): Promise<CommentDto[]> {
+    return await this.commentUC.getRepliesByComment(parentId);
   }
 
   @Patch(':id')
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
   @ApiNotFoundResponse({ type: NotFoundResponseDto })
-  @ApiOkResponse({ type: CommentDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   @ApiParam({ name: 'id', required: true, description: 'ID del comentario' })
   async update(
     @Param('id') id: string,
-    @Body() updateCommentDto: CommentDto,
-    @Req() req,
-  ): Promise<CommentModel> {
-    return this.commentUC.updateComment(id, {
-      ...updateCommentDto,
-      userId: req.user.id,
-    });
+    @Body() updateCommentDto: UpdateCommentDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.commentUC.update(id, updateCommentDto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Comentario actualizado correctamente',
+    };
   }
 
   @Delete(':id')
@@ -109,8 +109,8 @@ export class CommentController {
   async remove(
     @Param('id') id: string,
     @Req() req,
-  ): Promise<{ statusCode: number; message: string }> {
-    await this.commentUC.deleteComment(id, req.user.id);
+  ): Promise<DeleteReCordResponseDto> {
+    await this.commentUC.delete(id, req.user.id);
     return {
       statusCode: HttpStatus.OK,
       message: 'Comentario eliminado correctamente',
