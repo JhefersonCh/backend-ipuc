@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { LikeUseCase } from '../useCases/like.uc';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { LikeDto } from '../dto/like.dto';
 
 @Controller('like')
-@Controller('Me gusta')
+@ApiTags('Me gusta')
 export class LikeController {
   constructor(private readonly likeUseCase: LikeUseCase) {}
 

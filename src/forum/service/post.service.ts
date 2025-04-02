@@ -126,4 +126,12 @@ export class PostService {
       hasLiked: post.hasliked,
     };
   }
+
+  async findOne(id: string) {
+    const post = await this.postRepository.findOne({ where: { id } });
+    if (!post) {
+      throw new HttpException('El post no existe', HttpStatus.NOT_FOUND);
+    }
+    return post;
+  }
 }
