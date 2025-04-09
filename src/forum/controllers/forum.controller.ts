@@ -14,6 +14,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -24,7 +25,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreatePostDto, UpdatePostDto } from '../dto/post.dto';
+import { CreatePostDto, GetAllPostsDto, UpdatePostDto } from '../dto/post.dto';
 import { PostUseCase } from '../useCases/post.uc';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -36,10 +37,8 @@ export class ForumController {
   @Get('post/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse({ type: NotFoundResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  async getPost(@Param('id') id: string, @Req() req) {
-    const post = await this.postUseCase.findById(id, req.user.id);
+  async getPost(@Param('id') id: string, @Query() query: GetAllPostsDto) {
+    const post = await this.postUseCase.findById(id, query?.userId);
     return {
       statusCode: HttpStatus.OK,
       data: post,
@@ -102,10 +101,8 @@ export class ForumController {
 
   @Get('posts')
   @ApiOkResponse()
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  async getAllPosts(@Req() req) {
-    const posts = await this.postUseCase.findAll(req.user.id);
+  async getAllPosts(@Query() query: GetAllPostsDto) {
+    const posts = await this.postUseCase.findAll(query?.userId);
     return {
       statusCode: HttpStatus.OK,
       data: posts,
