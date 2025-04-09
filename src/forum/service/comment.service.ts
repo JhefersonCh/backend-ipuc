@@ -21,7 +21,9 @@ export class CommentService {
   async create(commentDto: CommentModel): Promise<{ rowId: string }> {
     await this.userService.findOne(commentDto.userId);
     await this.postService.findOne(commentDto.postId);
-    commentDto.parentId && (await this.findOne(commentDto.parentId));
+    if (commentDto.parentId) {
+      await this.findOne(commentDto.parentId);
+    }
     return {
       rowId: (await this.commentRepository.insert(commentDto)).identifiers[0]
         .id,
@@ -38,7 +40,9 @@ export class CommentService {
     await this.postService.findOne(postId);
     return this.commentRepository
       .createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.user', 'user')
       .leftJoinAndSelect('comment.replies', 'reply')
+      .leftJoinAndSelect('reply.user', 'replyUser')
       .where('comment.postId = :postId', { postId })
       .andWhere('comment.parentId IS NULL')
       .getMany();
