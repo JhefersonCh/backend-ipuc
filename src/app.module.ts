@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ForumModule } from './forum/forum.module';
 import { AdminModule } from './admin/admin.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -18,9 +19,16 @@ import { AdminModule } from './admin/admin.module';
       load: [config],
     }),
     ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
+    ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
     SharedModule.forRoot(),
+    MulterModule.register({
+      dest: './uploads',
+    }),
     AuthModule,
     UserModule,
     ForumModule,

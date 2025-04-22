@@ -11,12 +11,14 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { Comment } from './entities/comment.entity';
 import { Post } from './entities/post.entity';
 import { Like } from './entities/like.entity';
+import { FilesController } from './controllers/files.controller';
 
 @Module({})
 export class SharedModule {
   static forRoot(): DynamicModule {
     return {
       module: SharedModule,
+      controllers: [FilesController],
       imports: [
         TypeOrmModule.forRootAsync({
           inject: [ConfigService],
