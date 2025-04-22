@@ -3,6 +3,7 @@ import { HttpStatus } from '@nestjs/common';
 import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { User } from 'src/shared/entities/user.entity';
 
 export class CommentDto {
   @ApiProperty({
@@ -61,6 +62,7 @@ export class GetCommentByIdResponseDto implements BaseResponseDto {
 }
 
 export interface GetPostCommentsResponse extends Comment {
+  user: User;
   replies: Comment[];
 }
 
@@ -76,6 +78,11 @@ export class GetPostCommentsResponseDto implements BaseResponseDto {
         parentId: null,
         createdAt: '2025-04-03T01:28:32.355Z',
         updatedAt: '2025-04-03T01:28:32.355Z',
+        user: {
+          id: 'd3091806-b9e9-4415-8fdc-64c89bea7c9d',
+          firsName: 'Camilo',
+          lastName: 'Perez',
+        },
         replies: [
           {
             id: 'd3091806-b9e9-4415-8fdc-64c89bea7c9d',
@@ -85,6 +92,11 @@ export class GetPostCommentsResponseDto implements BaseResponseDto {
             parentId: '74876e91-49e8-4a81-a822-1d231386095b',
             createdAt: '2025-04-03T01:28:58.724Z',
             updatedAt: '2025-04-03T01:28:58.724Z',
+            user: {
+              id: 'd3091806-b9e9-4415-8fdc-64c89bea7c9d',
+              firsName: 'Camilo',
+              lastName: 'Perez',
+            },
           },
           {
             id: '00c9a270-7f10-4a12-8e4f-cd7b8a9ce3e2',
@@ -94,6 +106,11 @@ export class GetPostCommentsResponseDto implements BaseResponseDto {
             parentId: '74876e91-49e8-4a81-a822-1d231386095b',
             createdAt: '2025-04-03T01:54:18.134Z',
             updatedAt: '2025-04-03T01:54:18.134Z',
+            user: {
+              id: 'd3091806-b9e9-4415-8fdc-64c89bea7c9d',
+              firsName: 'Camilo',
+              lastName: 'Perez',
+            },
           },
         ],
       },
