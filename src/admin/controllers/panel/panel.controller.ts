@@ -1,3 +1,4 @@
+import { Roles } from './../../../shared/decorators/roles.decorator';
 import { RolesGuard } from './../../../shared/guards/roles.guard';
 import {
   CreateActivityDto,
@@ -31,7 +32,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Roles } from 'src/shared/decorators/roles.decorator';
 
 @Controller('panel')
 @ApiTags('Panel de Administrador')
