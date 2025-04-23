@@ -1,7 +1,13 @@
-import { UploadFileDto } from './../../../shared/dtos/files.dto';
-import { multerConfig } from './../../../shared/config/multer.config';
+import { RolesGuard } from './../../../shared/guards/roles.guard';
+import {
+  CreateActivityDto,
+  updateActivity,
+  updateConfiguration,
+} from './../../dtos/panel.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
+  CreatedRecordResponseDto,
+  DeleteReCordResponseDto,
   UnauthorizedResponseDto,
   UpdateRecordResponseDto,
 } from './../../../shared/dtos/response.dto';
@@ -9,51 +15,103 @@ import { PanelUC } from './../../uc/panel.uc';
 
 import {
   Controller,
-  Get,
-  HttpStatus,
-  Put,
   UseGuards,
-  UseInterceptors,
-  UploadedFile,
   Post,
+  Body,
+  Req,
+  Patch,
+  HttpStatus,
+  Delete,
+  Param,
+  Get,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { Roles } from 'src/shared/decorators/roles.decorator';
 
 @Controller('panel')
 @ApiTags('Panel de Administrador')
 export class PanelController {
   constructor(private readonly panelUc: PanelUC) {}
 
-  @Get()
-  async get() {
-    return 'Funcionando';
+  @Post('activity/create')
+  @ApiOkResponse({ type: CreatedRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async createActivity(
+    @Body() body: CreateActivityDto,
+  ): Promise<CreatedRecordResponseDto> {
+    const rowId = await this.panelUc.createActivity(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Actividad creada exitosamente',
+      data: rowId,
+    };
   }
 
-  @Post('home/hero-image')
+  @Patch('activity/update')
   @ApiOkResponse({ type: UpdateRecordResponseDto })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard())
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadFileDto })
-  @UseInterceptors(FileInterceptor('file', multerConfig('home', 'hero')))
-  async updateHeroImage(
-    @UploadedFile() file: Express.Multer.File,
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async updateActivity(
+    @Body() body: updateActivity,
   ): Promise<UpdateRecordResponseDto> {
-    //await this.panelUc.updateHeroImage();
+    await this.panelUc.updateActivity(body);
     return {
       statusCode: HttpStatus.OK,
-      message: 'Imagen actualizada correctamente.',
+      message: 'Actividad actualizada exitosamente',
+    };
+  }
+
+  @Delete('activity/delete/:id')
+  @ApiOkResponse({ type: DeleteReCordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async deleteActivity(
+    @Param('id') id: string,
+  ): Promise<DeleteReCordResponseDto> {
+    await this.panelUc.deleteActivity(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Actividad eliminada exitosamente',
+    };
+  }
+
+  @Patch('configuration')
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async updateConfiguration(
+    @Body() body: updateConfiguration,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.panelUc.updateConfiguration(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Configuración actualizada exitosamente',
+    };
+  }
+
+  @Get('configuration')
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  async getConfiguration() {
+    const configuration = await this.panelUc.getConfiguration();
+    return {
+      statusCode: HttpStatus.OK,
+      data: configuration,
     };
   }
 }

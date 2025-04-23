@@ -25,6 +25,7 @@
     "migration:revert": "npm run typeorm -- -d typeorm.config.ts migration:revert"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.726.1",
     "@nestjs/common": "^11.0.11",
     "@nestjs/config": "^4.0.1",
     "@nestjs/core": "^11.0.11",
@@ -39,11 +40,13 @@
     "body-parser": "^1.20.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cloudinary": "^2.6.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-basic-auth": "^1.2.1",
     "helmet": "^8.0.0",
     "multer": "1.4.5-lts.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",

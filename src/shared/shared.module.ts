@@ -12,6 +12,7 @@ import { Comment } from './entities/comment.entity';
 import { Post } from './entities/post.entity';
 import { Like } from './entities/like.entity';
 import { FilesController } from './controllers/files.controller';
+import { B2Service } from './services/b2.service';
 
 @Module({})
 export class SharedModule {
@@ -46,7 +47,13 @@ export class SharedModule {
           defaultStrategy: 'jwt',
         }),
       ],
-      providers: [UserRepository, JwtStrategy, AuthService, UserService],
+      providers: [
+        UserRepository,
+        JwtStrategy,
+        AuthService,
+        UserService,
+        B2Service,
+      ],
       exports: [],
     };
   }

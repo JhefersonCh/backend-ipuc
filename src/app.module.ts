@@ -11,6 +11,8 @@ import { UserModule } from './user/user.module';
 import { ForumModule } from './forum/forum.module';
 import { AdminModule } from './admin/admin.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './shared/guards/roles.guard';
 
 @Module({
   imports: [

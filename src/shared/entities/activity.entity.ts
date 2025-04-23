@@ -12,5 +12,8 @@ export class Activity {
   description: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  image: string;
+  imageUrl: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  publicId: string;
 }

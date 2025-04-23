@@ -23,5 +23,5 @@ export class UploadFileDto {
   })
   @IsString()
   @IsOptional()
-  filePath: string;
+  folder: string;
 }

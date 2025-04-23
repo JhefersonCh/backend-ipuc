@@ -1,9 +1,9 @@
 import {
   Body,
   Controller,
-  HttpStatus,
+  Delete,
+  Param,
   Post,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -18,19 +18,18 @@ import {
 } from '@nestjs/swagger';
 import {
   CreatedRecordResponseDto,
+  DeleteReCordResponseDto,
   UnauthorizedResponseDto,
 } from '../dtos/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UploadFileDto } from '../dtos/files.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from '../config/multer.config';
-import { join } from 'path';
-import * as fs from 'fs';
+import { B2Service } from '../services/b2.service';
 
 @Controller('files')
 @ApiTags('Archivos')
 export class FilesController {
-  constructor() {}
+  constructor(private readonly b2Service: B2Service) {}
 
   @Post()
   @ApiOkResponse({ type: CreatedRecordResponseDto })
@@ -39,39 +38,26 @@ export class FilesController {
   @UseGuards(AuthGuard())
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadFileDto })
-  @UseInterceptors(FileInterceptor('file', multerConfig()))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: UploadFileDto,
-    @Req() req,
   ) {
-    if (file && (req as any).fileFields) {
-      const tempPath = join('./uploads/temp', (req as any).fileFields.tempName);
+    const result = await this.b2Service.uploadImage(
+      file,
+      body.fileName,
+      body.folder,
+    );
+    return { url: result['secure_url'], publicId: result['public_id'] };
+  }
 
-      const finalPath = (req as any).fileFields.destinationPath(body);
-
-      const finalName = body.fileName
-        ? `${body.fileName}${(req as any).fileFields.ext}`
-        : `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${(req as any).fileFields.ext}`;
-
-      const finalFilePath = join(finalPath, finalName);
-
-      if (body.fileName && fs.existsSync(finalFilePath)) {
-        fs.unlinkSync(finalFilePath);
-      }
-
-      if (fs.existsSync(tempPath)) {
-        if (!fs.existsSync(finalPath)) {
-          fs.mkdirSync(finalPath, { recursive: true });
-        }
-
-        fs.renameSync(tempPath, finalFilePath);
-      }
-    }
-
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Archivo subido correctamente',
-    };
+  @Delete('/:publicId')
+  @ApiOkResponse({ type: DeleteReCordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  async deleteFile(@Param('publicId') publicId: string) {
+    await this.b2Service.deleteImage(publicId);
+    return { message: 'File deleted successfully' };
   }
 }
