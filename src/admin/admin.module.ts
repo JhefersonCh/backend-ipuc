@@ -9,6 +9,7 @@ import { PanelUC } from './uc/panel.uc';
 import { PassportModule } from '@nestjs/passport';
 import { SharedModule } from 'src/shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ActivitiesService } from './services/activities.service';
 
 @Module({
   controllers: [PanelController],
@@ -22,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     PanelUC,
     ActivityRepository,
     ConfigurationRepository,
+    ActivitiesService,
   ],
 })
 export class AdminModule {}
