@@ -88,10 +88,6 @@ export class PanelController {
 
   @Get('activities')
   @ApiOkResponse()
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard(), RolesGuard)
-  @Roles('admin')
   async getActivities() {
     const activities = await this.panelUc.getActivities();
     return {
