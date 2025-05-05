@@ -2,8 +2,9 @@ import { Roles } from './../../../shared/decorators/roles.decorator';
 import { RolesGuard } from './../../../shared/guards/roles.guard';
 import {
   CreateActivityDto,
+  updateAbout,
   updateActivity,
-  updateConfiguration,
+  updateHome,
 } from './../../dtos/panel.dto';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -96,31 +97,53 @@ export class PanelController {
     };
   }
 
-  @Patch('configuration')
+  @Get('home')
+  @ApiOkResponse()
+  async getHome() {
+    const home = await this.panelUc.getHome();
+    return {
+      statusCode: HttpStatus.OK,
+      data: home,
+    };
+  }
+
+  @Patch('home/update')
   @ApiOkResponse({ type: UpdateRecordResponseDto })
   @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles('admin')
-  async updateConfiguration(
-    @Body() body: updateConfiguration,
+  async updateHome(@Body() body: updateHome): Promise<UpdateRecordResponseDto> {
+    await this.panelUc.updateConfiguration(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Información actualizada exitosamente',
+    };
+  }
+
+  @Get('about')
+  @ApiOkResponse()
+  async getAbout() {
+    const about = await this.panelUc.getAbout();
+    return {
+      statusCode: HttpStatus.OK,
+      data: about,
+    };
+  }
+
+  @Patch('about/update')
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async updateAbout(
+    @Body() body: updateAbout,
   ): Promise<UpdateRecordResponseDto> {
     await this.panelUc.updateConfiguration(body);
     return {
       statusCode: HttpStatus.OK,
-      message: 'Configuración actualizada exitosamente',
-    };
-  }
-
-  @Get('configuration')
-  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard(), RolesGuard)
-  async getConfiguration() {
-    const configuration = await this.panelUc.getConfiguration();
-    return {
-      statusCode: HttpStatus.OK,
-      data: configuration,
+      message: 'Información actualizada exitosamente',
     };
   }
 }

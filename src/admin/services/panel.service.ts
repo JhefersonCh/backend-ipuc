@@ -35,14 +35,35 @@ export class PanelService {
     return await this.activityRepository.delete(id);
   }
 
-  async updateConfiguration(configuration: ConfigurationModel) {
+  async getHome() {
+    const [homeInfo] = await this.configurationRepository.find();
+    return {
+      heroUrl: homeInfo.heroUrl,
+      heroPublicId: homeInfo.heroPublicId,
+      title: homeInfo.title,
+      description: homeInfo.description,
+      name: homeInfo.name,
+      additionalTitle: homeInfo.additionalTitle,
+      additionalDescription: homeInfo.additionalDescription,
+      enableRedirectToIpuc: homeInfo.enableRedirectToIpuc,
+    };
+  }
+
+  async updateConfiguration(configuration: Partial<ConfigurationModel>) {
     return await this.configurationRepository.update(
-      configuration.id,
-      configuration,
+      { id: 1 },
+      { ...configuration, id: 1 },
     );
   }
 
-  async getConfiguration() {
-    return await this.configurationRepository.find()[0];
+  async getAbout() {
+    const [aboutInfo] = await this.configurationRepository.find();
+    return {
+      mission: aboutInfo.mission,
+      vision: aboutInfo.vision,
+      ubicationUrl: aboutInfo.ubicationUrl,
+      ubicationCoordinates: aboutInfo.ubicationCoordinates,
+      enableRedirectToGoogleMaps: aboutInfo.enableRedirectToGoogleMaps,
+    };
   }
 }

@@ -23,15 +23,19 @@ export class PanelUC {
     return await this.panelService.deleteActivity(id);
   }
 
-  async updateConfiguration(configuration: ConfigurationModel) {
+  async getActivities() {
+    return await this.activitiesService.getActivities();
+  }
+
+  async getHome() {
+    return await this.panelService.getHome();
+  }
+
+  async updateConfiguration(configuration: Partial<ConfigurationModel>) {
     return await this.panelService.updateConfiguration(configuration);
   }
 
-  async getConfiguration() {
-    return await this.panelService.getConfiguration();
-  }
-
-  async getActivities() {
-    return await this.activitiesService.getActivities();
+  async getAbout() {
+    return await this.panelService.getAbout();
   }
 }
