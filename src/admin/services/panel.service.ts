@@ -66,4 +66,13 @@ export class PanelService {
       enableRedirectToGoogleMaps: aboutInfo.enableRedirectToGoogleMaps,
     };
   }
+
+  async getGeneralInfo() {
+    const [generalInfo] = await this.configurationRepository.find();
+    return {
+      appName: generalInfo.appName,
+      logoUrl: generalInfo.logoUrl,
+      logoPublicId: generalInfo.logoPublicId,
+    };
+  }
 }

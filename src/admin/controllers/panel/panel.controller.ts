@@ -4,6 +4,7 @@ import {
   CreateActivityDto,
   updateAbout,
   updateActivity,
+  updateGeneralInfo,
   updateHome,
 } from './../../dtos/panel.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -139,6 +140,32 @@ export class PanelController {
   @Roles('admin')
   async updateAbout(
     @Body() body: updateAbout,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.panelUc.updateConfiguration(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Información actualizada exitosamente',
+    };
+  }
+
+  @Get('general-info')
+  @ApiOkResponse()
+  async getGeneralInfo() {
+    const generalInfo = await this.panelUc.getGeneralInfo();
+    return {
+      statusCode: HttpStatus.OK,
+      data: generalInfo,
+    };
+  }
+
+  @Patch('general-info/update')
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async updateGeneralInfo(
+    @Body() body: updateGeneralInfo,
   ): Promise<UpdateRecordResponseDto> {
     await this.panelUc.updateConfiguration(body);
     return {

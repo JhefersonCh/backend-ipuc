@@ -152,3 +152,29 @@ export class updateAbout {
   @IsNotEmpty()
   enableRedirectToGoogleMaps: boolean;
 }
+
+export class updateGeneralInfo {
+  @ApiProperty({
+    description: 'Nombre de la página',
+    example: 'Nombre de la página',
+  })
+  @IsString()
+  @IsNotEmpty()
+  appName: string;
+
+  @ApiProperty({
+    description: 'Logo de la página',
+    example: 'Logo de la página',
+  })
+  @IsString()
+  @IsNotEmpty()
+  logoUrl: string;
+
+  @ApiProperty({
+    description: 'Id público del logo',
+    example: 'publicId',
+  })
+  @IsString()
+  @IsNotEmpty()
+  logoPublicId: string;
+}

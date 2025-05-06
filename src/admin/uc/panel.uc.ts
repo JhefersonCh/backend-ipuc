@@ -38,4 +38,8 @@ export class PanelUC {
   async getAbout() {
     return await this.panelService.getAbout();
   }
+
+  async getGeneralInfo() {
+    return await this.panelService.getGeneralInfo();
+  }
 }
