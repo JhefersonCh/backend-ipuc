@@ -1,3 +1,4 @@
+import { UserRepository } from './../shared/repositories/user.repository';
 import { ConfigurationRepository } from './../shared/repositories/configuration.repository';
 import { Configuration } from './../shared/entities/configuration.entity';
 import { Activity } from './../shared/entities/activity.entity';
@@ -10,9 +11,12 @@ import { PassportModule } from '@nestjs/passport';
 import { SharedModule } from 'src/shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ActivitiesService } from './services/activities.service';
+import { UserController } from './controllers/user/user.controller';
+import { UserService } from './services/user.service';
+import { UserUC } from './uc/user.uc';
 
 @Module({
-  controllers: [PanelController],
+  controllers: [PanelController, UserController],
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     SharedModule.forRoot(),
@@ -24,6 +28,9 @@ import { ActivitiesService } from './services/activities.service';
     ActivityRepository,
     ConfigurationRepository,
     ActivitiesService,
+    UserService,
+    UserUC,
+    UserRepository,
   ],
 })
 export class AdminModule {}
