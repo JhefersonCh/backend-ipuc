@@ -146,4 +146,21 @@ export class PostService {
     }
     return post;
   }
+
+  async getPostsCountForUser(id: string): Promise<{ total: number }> {
+    try {
+      const total = await this.postRepository
+        .createQueryBuilder('post')
+        .where('post.userId = :id', { id })
+        .getCount();
+
+      return { total };
+    } catch (error) {
+      console.error('Error al obtener el conteo de posts:', error);
+      throw new HttpException(
+        'Error al obtener el conteo de publicaciones del usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

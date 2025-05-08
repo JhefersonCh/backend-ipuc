@@ -1,3 +1,10 @@
+import { PostRepository } from './repositories/post.respository';
+import { LikeRepository } from './repositories/like.repository';
+import { CommentRepository } from './repositories/comment.repository';
+import { PostService } from './../forum/service/post.service';
+import { LikeService } from './../forum/service/like.service';
+import { CommentService } from './../forum/service/comment.service';
+import { ProfileService } from './../user/services/user/profile.service';
 import { UserService } from './../user/services/user/user.service';
 import { AuthService } from './../auth/services/auth/auth.service';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -53,6 +60,13 @@ export class SharedModule {
         AuthService,
         UserService,
         B2Service,
+        ProfileService,
+        CommentService,
+        CommentRepository,
+        LikeService,
+        LikeRepository,
+        PostService,
+        PostRepository,
       ],
       exports: [],
     };

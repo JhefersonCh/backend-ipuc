@@ -1,5 +1,7 @@
 import {
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -62,5 +64,27 @@ export class CommentService {
       throw new ForbiddenException('No puedes eliminar este comentario');
     }
     await this.commentRepository.delete({ id: commentId });
+  }
+
+  async getCommentsCountForUser(id: string): Promise<{ total: number }> {
+    try {
+      // const testComment = await this.commentRepository.count({
+      //   where: { userId: id },
+      // });
+      // console.log(testComment);
+
+      const result = await this.commentRepository
+        .createQueryBuilder('comment')
+        .where('comment.userId = :id', { id })
+        .getCount();
+
+      return { total: result };
+    } catch (error) {
+      console.error('Error al obtener el conteo de comentarios:', error);
+      throw new HttpException(
+        'Error al obtener el conteo de comentarios del usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

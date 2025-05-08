@@ -25,14 +25,14 @@ import { CommentService } from './service/comment.service';
   providers: [
     PostService,
     PostUseCase,
+    PostRepository,
     LikeUseCase,
     LikeService,
     LikeRepository,
-    PostRepository,
     UserService,
     UserRepository,
-    CommentUseCase,
     CommentService,
+    CommentUseCase,
     CommentRepository,
   ],
 })
