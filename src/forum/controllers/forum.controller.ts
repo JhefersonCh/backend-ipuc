@@ -25,7 +25,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreatePostDto, GetAllPostsDto, UpdatePostDto } from '../dto/post.dto';
+import {
+  CreatePostDto,
+  GetAllPostsDto,
+  PaginatedListPostsParamsDto,
+  UpdatePostDto,
+} from '../dto/post.dto';
 import { PostUseCase } from '../useCases/post.uc';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -103,6 +108,16 @@ export class ForumController {
   @ApiOkResponse()
   async getAllPosts(@Query() query: GetAllPostsDto) {
     const posts = await this.postUseCase.findAll(query?.userId);
+    return {
+      statusCode: HttpStatus.OK,
+      data: posts,
+    };
+  }
+
+  @Get('posts/paginated-list')
+  @ApiOkResponse()
+  async getPaginatedPosts(@Query() query: PaginatedListPostsParamsDto) {
+    const posts = await this.postUseCase.paginatedList(query);
     return {
       statusCode: HttpStatus.OK,
       data: posts,

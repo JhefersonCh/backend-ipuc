@@ -1,8 +1,11 @@
+import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
 import { UserService } from './../../user/services/user/user.service';
 import { PostRepository } from './../../shared/repositories/post.respository';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 import { PostModel } from '../models/post.model';
+import { PaginatedListPostsParamsDto } from '../dto/post.dto';
 
 @Injectable()
 export class PostService {
@@ -93,6 +96,149 @@ export class PostService {
       updatedAt: post.post_updatedAt,
       userId: post.post_userId,
     }));
+  }
+
+  async paginatedList(query: PaginatedListPostsParamsDto) {
+    const countQb = this.postRepository.createQueryBuilder('post');
+
+    if (query.title) {
+      countQb.andWhere('post.title ILIKE :title', {
+        title: `%${query.title}%`,
+      });
+    }
+
+    if (query.description) {
+      countQb.andWhere('post.description ILIKE :description', {
+        description: `%${query.description}%`,
+      });
+    }
+
+    if (query.initialDate || query.finalDate) {
+      if (query.initialDate) {
+        countQb.andWhere('post.createdAt >= :initialDate', {
+          initialDate: query.initialDate,
+        });
+      }
+      if (query.finalDate) {
+        countQb.andWhere('post.createdAt <= :finalDate', {
+          finalDate: query.finalDate,
+        });
+      }
+    }
+
+    if (query.search) {
+      countQb.andWhere(
+        '(post.title ILIKE :search OR post.description ILIKE :search)',
+        { search: `%${query.search}%` },
+      );
+    }
+
+    const count = await countQb.getCount();
+
+    const postsIdsQb = this.postRepository
+      .createQueryBuilder('post')
+      .select('post.id');
+
+    if (query.title) {
+      postsIdsQb.andWhere('post.title ILIKE :title', {
+        title: `%${query.title}%`,
+      });
+    }
+
+    if (query.description) {
+      postsIdsQb.andWhere('post.description ILIKE :description', {
+        description: `%${query.description}%`,
+      });
+    }
+
+    if (query.initialDate || query.finalDate) {
+      if (query.initialDate) {
+        postsIdsQb.andWhere('post.createdAt >= :initialDate', {
+          initialDate: query.initialDate,
+        });
+      }
+      if (query.finalDate) {
+        postsIdsQb.andWhere('post.createdAt <= :finalDate', {
+          finalDate: query.finalDate,
+        });
+      }
+    }
+
+    if (query.search) {
+      postsIdsQb.andWhere(
+        '(post.title ILIKE :search OR post.description ILIKE :search)',
+        { search: `%${query.search}%` },
+      );
+    }
+
+    const skip = (query.page - 1) * query.perPage;
+    const take = query.perPage;
+
+    postsIdsQb.orderBy('post.createdAt', query.order).skip(skip).take(take);
+
+    const postsIds = await postsIdsQb.getMany();
+    const ids = postsIds.map((post) => post.id);
+
+    if (ids.length === 0) {
+      const pageMetaDto = new PageMetaDto({
+        itemCount: count,
+        pageOptionsDto: query,
+      });
+
+      return new ResponsePaginationDto([], pageMetaDto);
+    }
+
+    const postsQb = this.postRepository
+      .createQueryBuilder('post')
+      .select([
+        'post.id',
+        'post.title',
+        'post.description',
+        'post.createdAt',
+        'post.updatedAt',
+        'post.userId',
+        'COUNT(DISTINCT comments.id) as commentscount',
+        'COUNT(DISTINCT likes.id) as likescount',
+      ])
+      .leftJoin('post.comments', 'comments')
+      .leftJoin('post.likes', 'likes')
+      .whereInIds(ids)
+      .groupBy('post.id')
+      .orderBy('post.createdAt', query.order);
+
+    if (query.userId) {
+      postsQb
+        .addSelect(
+          `CASE 
+          WHEN EXISTS (
+            SELECT 1 FROM "Like" l WHERE l."postId" = post.id AND l."userId" = :userId
+          ) THEN true 
+          ELSE false 
+        END as hasliked`,
+        )
+        .setParameter('userId', query.userId);
+    }
+
+    const posts = await postsQb.getRawMany();
+
+    const entities = posts.map((post) => ({
+      id: post.post_id,
+      title: post.post_title,
+      description: post.post_description,
+      commentsCount: Number(post.commentscount) || 0,
+      likesCount: Number(post.likescount) || 0,
+      hasLiked: post.hasliked === true || post.hasliked === 'true',
+      createdAt: post.post_createdAt,
+      updatedAt: post.post_updatedAt,
+      userId: post.post_userId,
+    }));
+
+    const pageMetaDto = new PageMetaDto({
+      itemCount: count,
+      pageOptionsDto: query,
+    });
+
+    return new ResponsePaginationDto(entities, pageMetaDto);
   }
 
   async findById(id: string, userId: string) {
