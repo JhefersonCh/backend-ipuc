@@ -39,6 +39,9 @@ export class SharedModule {
             database: configService.get('db.database'),
             entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
             autoLoadEntities: true,
+            extra: {
+              max: 10,
+            },
           }),
         }),
         PassportModule,
