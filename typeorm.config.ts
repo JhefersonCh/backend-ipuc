@@ -12,4 +12,9 @@ module.exports = new DataSource({
   database: process.env.DB_DATABASE,
   entities: [`${__dirname}/src/**/*.entity.{ts,js}`],
   migrations: [`${__dirname}/src/**/migrations/*.{js,ts}`],
+  extra: {
+    max: 4,
+    idleTimeoutMillis: 10000,
+    idleInPoolTimeoutMillis: 10000,
+  },
 });
