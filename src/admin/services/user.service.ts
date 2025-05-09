@@ -45,6 +45,10 @@ export class UserService {
       order: { createdAt: params.order },
     });
 
+    entities.forEach((entity) => {
+      delete entity.password;
+    });
+
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: params });
 
     return new ResponsePaginationDto(entities, pageMetaDto);
@@ -55,7 +59,7 @@ export class UserService {
     if (!user) {
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
-    user.password = undefined;
+    delete user.password;
     return user;
   }
 
@@ -64,7 +68,7 @@ export class UserService {
     if (!user) {
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
-    user.password = undefined;
+    delete user.password;
     return user;
   }
 
@@ -92,9 +96,7 @@ export class UserService {
         );
       }
     }
-    if (body.password) {
-      body.password = await bcrypt.hash(body.password, 10);
-    }
+    delete body.password;
     return this.userRepository.update(id, body);
   }
 
