@@ -55,6 +55,7 @@ export class UserService {
     if (!user) {
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
+    user.password = undefined;
     return user;
   }
 
@@ -63,6 +64,7 @@ export class UserService {
     if (!user) {
       throw new HttpException('El usuario no existe', HttpStatus.NOT_FOUND);
     }
+    user.password = undefined;
     return user;
   }
 
@@ -89,6 +91,9 @@ export class UserService {
           HttpStatus.BAD_REQUEST,
         );
       }
+    }
+    if (body.password) {
+      body.password = await bcrypt.hash(body.password, 10);
     }
     return this.userRepository.update(id, body);
   }
