@@ -1,3 +1,5 @@
+import { MailsService } from './../shared/services/mails.service';
+import { MailTemplateService } from './../shared/services/mail-template.service';
 import { PasswordService } from './../user/services/user/password.service';
 import { UserRepository } from './../shared/repositories/user.repository';
 import { UserService } from './../user/services/user/user.service';
@@ -30,6 +32,8 @@ import { PassportModule } from '@nestjs/passport';
     UserService,
     PasswordService,
     UserRepository,
+    MailsService,
+    MailTemplateService,
   ],
   exports: [],
 })

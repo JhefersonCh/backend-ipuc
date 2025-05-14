@@ -1,5 +1,6 @@
 import {
   LoginDto,
+  RecoveryPasswordBodyDto,
   RefreshTokenBodyDto,
   RefreshTokenResponseDto,
   SignInResponseDto,
@@ -59,5 +60,16 @@ export class AuthController {
   @UseGuards(AuthGuard())
   async signOut(@Body() body: SignOutBodyDto) {
     return await this.authUC.signOut(body);
+  }
+
+  @Post('/recovery-password')
+  async recoveryPassword(
+    @Body() body: RecoveryPasswordBodyDto,
+  ): Promise<{ statusCode: number; message: string }> {
+    await this.authUC.recoveryPassword(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Correo enviado correctamente',
+    };
   }
 }

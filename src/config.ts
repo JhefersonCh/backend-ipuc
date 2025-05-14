@@ -38,5 +38,13 @@ export const config = async () => {
       api_key: process.env.CLOUDINARY_API_KEY,
       api_secret: process.env.CLOUDINARY_API_SECRET,
     },
+    mail: {
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      user: process.env.MAIL_USER,
+      password: process.env.MAIL_PASSWORD,
+      sender: process.env.MAIL_SENDER,
+      secure: process.env.MAIL_SECURE === 'true',
+    },
   };
 };

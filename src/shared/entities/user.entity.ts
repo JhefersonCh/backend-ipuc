@@ -62,6 +62,12 @@ export class User {
   })
   updatedAt?: Date;
 
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  resetToken?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetTokenExpiry?: Date;
+
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 

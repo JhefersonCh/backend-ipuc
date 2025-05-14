@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+import { INVALID_ACCESS_DATA_MESSAGE } from './../../../auth/constants/messages.constants';
 import { PasswordService } from './password.service';
 import {
   NOT_FOUND_MESSAGE,
@@ -5,7 +7,7 @@ import {
 } from './../../../shared/constants/messages.constant';
 import { ChangePasswordDto } from './../../dtos/profile.dto';
 import { User } from './../../../shared/entities/user.entity';
-import { UserModel } from './../../models/user.model';
+import { UserModel, UserFiltersModel } from './../../models/user.model';
 import { UserRepository } from './../../../shared/repositories/user.repository';
 import {
   BadRequestException,
@@ -13,6 +15,7 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
@@ -176,5 +179,36 @@ export class UserService {
   async delete(id: string) {
     await this.findOne(id);
     return await this.userRepository.delete(id);
+  }
+
+  async findOneByParams(
+    params: UserFiltersModel,
+    login: boolean = false,
+    errors: boolean = true,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { ...params.where },
+    });
+    if (!user && errors) {
+      if (!login) {
+        throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      } else {
+        throw new UnauthorizedException(INVALID_ACCESS_DATA_MESSAGE);
+      }
+    }
+    return user;
+  }
+
+  async generateResetToken(userId: string): Promise<string> {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + 1);
+
+    await this.userRepository.update(userId, {
+      resetToken: token,
+      resetTokenExpiry: expiryDate,
+    });
+
+    return token;
   }
 }
