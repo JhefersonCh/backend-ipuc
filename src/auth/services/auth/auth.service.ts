@@ -141,7 +141,7 @@ export class AuthService {
         to: user.email,
         subject: 'Recuperación de contraseña',
         body: this.mailTemplateService.recoveryPasswordTemplate(
-          `http://localhost:4200/auth/${user.id}/change-password`,
+          `http://backend-ipuc.vercel.app/auth/${user.id}/change-password`,
           user.firstName,
           token,
         ),
