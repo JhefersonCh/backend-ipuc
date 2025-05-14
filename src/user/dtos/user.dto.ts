@@ -134,19 +134,3 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: 'El nombre de usuario es requerido' })
   username: string;
 }
-
-export class ChangePasswordDto {
-  @ApiProperty({
-    example: 'passwordOld',
-    required: true,
-  })
-  @IsString()
-  currentPassword: string;
-
-  @ApiProperty({
-    example: 'newPassword',
-    required: true,
-  })
-  @IsString()
-  newPassword: string;
-}

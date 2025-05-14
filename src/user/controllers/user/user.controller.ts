@@ -1,4 +1,10 @@
 import {
+  NOT_FOUND_RESPONSE,
+  UPDATED_RESPONSE,
+} from './../../../shared/constants/response.constant';
+import { ChangePasswordDto } from './../../dtos/profile.dto';
+import { UPDATED_MESSAGE } from './../../../shared/constants/messages.constant';
+import {
   CreatedRecordResponseDto,
   DeleteReCordResponseDto,
   DuplicatedResponseDto,
@@ -18,7 +24,6 @@ import {
   BaseUserDto,
   CreateOrUpdateUserDto,
   UpdateUserDto,
-  ChangePasswordDto,
 } from './../../dtos/user.dto';
 
 import { UserUC } from './../../useCases/user.uc';
@@ -32,7 +37,6 @@ import {
   Patch,
   Post,
   Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -42,18 +46,19 @@ import { AuthGuard } from '@nestjs/passport';
 export class UserController {
   constructor(private readonly userUC: UserUC) {}
 
-  @Patch('change-password')
-  @ApiOkResponse({ description: 'Contraseña actualizada correctamente' })
+  @Post('/change-password')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  async changePassword(@Request() req, @Body() body: ChangePasswordDto) {
-    console.log('holaaaa');
-
-    const userId = req.user.id;
-    await this.userUC.changePassword(userId, body);
+  async changePassword(
+    @Body() body: ChangePasswordDto,
+    @Req() req,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.userUC.changePassword(body, req.user.id);
     return {
+      message: UPDATED_MESSAGE,
       statusCode: HttpStatus.OK,
-      message: 'Contraseña actualizada correctamente',
     };
   }
 

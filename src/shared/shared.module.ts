@@ -1,3 +1,4 @@
+import { PasswordService } from './../user/services/user/password.service';
 import { PostRepository } from './repositories/post.respository';
 import { LikeRepository } from './repositories/like.repository';
 import { CommentRepository } from './repositories/comment.repository';
@@ -67,6 +68,7 @@ export class SharedModule {
         B2Service,
         ProfileService,
         CommentService,
+        PasswordService,
         CommentRepository,
         LikeService,
         LikeRepository,
