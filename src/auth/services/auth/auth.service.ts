@@ -141,7 +141,7 @@ export class AuthService {
         to: user.email,
         subject: 'Recuperación de contraseña',
         body: this.mailTemplateService.recoveryPasswordTemplate(
-          `http://backend-ipuc.vercel.app/auth/${user.id}/change-password`,
+          `https://ipuc-cuarta-test.netlify.app/auth/${user.id}/change-password`,
           user.firstName,
           token,
         ),
