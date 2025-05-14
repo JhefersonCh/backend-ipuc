@@ -1,5 +1,5 @@
 import { ChangePasswordDto } from '../dtos/profile.dto';
-import { CreateOrUpdateUserDto } from '../dtos/user.dto';
+import { CreateOrUpdateUserDto, RecoveryPasswordDto } from '../dtos/user.dto';
 import { BaseUserDto } from '../dtos/user.dto';
 import { UserModel } from '../models/user.model';
 import { UserService } from './../services/user/user.service';
@@ -35,6 +35,10 @@ export class UserUC {
 
   async changePassword(body: ChangePasswordDto, id: string) {
     return await this.userService.changePassword(body, id);
+  }
+
+  async recoveryPassword(body: RecoveryPasswordDto) {
+    return await this.userService.recoveryPassword(body);
   }
 
   async delete(id: string) {

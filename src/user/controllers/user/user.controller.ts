@@ -24,6 +24,7 @@ import {
   BaseUserDto,
   CreateOrUpdateUserDto,
   UpdateUserDto,
+  RecoveryPasswordDto,
 } from './../../dtos/user.dto';
 
 import { UserUC } from './../../useCases/user.uc';
@@ -45,6 +46,19 @@ import { AuthGuard } from '@nestjs/passport';
 @ApiTags('Usuarios')
 export class UserController {
   constructor(private readonly userUC: UserUC) {}
+
+  @Patch('/recovery-password')
+  @ApiOkResponse(UPDATED_RESPONSE)
+  @ApiNotFoundResponse(NOT_FOUND_RESPONSE)
+  async recoveryPassword(
+    @Body() body: RecoveryPasswordDto,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.userUC.recoveryPassword(body);
+    return {
+      message: UPDATED_MESSAGE,
+      statusCode: HttpStatus.OK,
+    };
+  }
 
   @Post('/change-password')
   @ApiOkResponse(UPDATED_RESPONSE)

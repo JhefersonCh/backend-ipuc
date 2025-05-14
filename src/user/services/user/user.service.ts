@@ -18,6 +18,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { RecoveryPasswordDto } from 'src/user/dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -210,5 +211,35 @@ export class UserService {
     });
 
     return token;
+  }
+
+  async recoveryPassword(body: RecoveryPasswordDto) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: body.userId, resetToken: body.resetToken },
+      });
+      if (!user) {
+        throw new HttpException(NOT_FOUND_MESSAGE, HttpStatus.NOT_FOUND);
+      }
+      if (user.resetTokenExpiry < new Date()) {
+        throw new HttpException(
+          'Token inválido o expirado',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      if (body.newPassword !== body.confirmNewPassword) {
+        throw new HttpException(PASSWORDS_NOT_MATCH, HttpStatus.CONFLICT);
+      }
+      await this.userRepository.update(
+        { id: body.userId },
+        {
+          password: await this._passwordService.generateHash(body.newPassword),
+          resetToken: null,
+          resetTokenExpiry: null,
+        },
+      );
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

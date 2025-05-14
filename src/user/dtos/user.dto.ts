@@ -5,6 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, IsNotEmpty } from 'class-validator';
 import { HttpStatus } from '@nestjs/common';
 import { GET_ALL_USER_EXAMPLE } from '../constants/examples.conts';
+import { ChangePasswordBaseDto } from './profile.dto';
 
 export class BaseUserDto {
   @ApiProperty({
@@ -133,4 +134,23 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'El nombre de usuario es requerido' })
   username: string;
+}
+
+export class RecoveryPasswordDto extends ChangePasswordBaseDto {
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'uuid',
+  })
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'token',
+  })
+  @IsString()
+  @IsNotEmpty()
+  resetToken: string;
 }
