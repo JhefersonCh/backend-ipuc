@@ -14,12 +14,16 @@ export class Event {
   id: string;
 
   @Column({
+    type: 'varchar',
     nullable: false,
+    length: 100,
   })
-  name: string;
+  title: string;
 
   @Column({
+    type: 'varchar',
     nullable: false,
+    length: 1000,
   })
   description: string;
 
@@ -41,12 +45,16 @@ export class Event {
   activity: Activity;
 
   @Column({
+    type: 'varchar',
     nullable: true,
+    length: 255,
   })
   imageUrl: string;
 
   @Column({
+    type: 'varchar',
     nullable: true,
+    length: 100,
   })
   publicId: string;
 
