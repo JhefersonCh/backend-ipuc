@@ -1,3 +1,5 @@
+import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
+import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 import { EventRepository } from './../../shared/repositories/event.repository';
 import { ConfigurationRepository } from './../../shared/repositories/configuration.repository';
 import { ActivityRepository } from './../../shared/repositories/activity.repository';
@@ -6,8 +8,6 @@ import { ActivityModel, EventModel } from '../models/activity.model';
 import { ConfigurationModel } from '../models/configuration.model';
 import { PaginatedListEventsParamsDto } from '../dtos/activity.dto';
 import { Between, ILike } from 'typeorm';
-import { PageMetaDto } from 'src/shared/dtos/pageMeta.dto';
-import { ResponsePaginationDto } from 'src/shared/dtos/pagination.dto';
 
 @Injectable()
 export class PanelService {
