@@ -63,4 +63,8 @@ export class PanelUC {
   async eventsPaginatedList(query: PaginatedListEventsParamsDto) {
     return await this.panelService.eventsPaginatedList(query);
   }
+
+  async getEvent(id: string) {
+    return await this.panelService.findById(id);
+  }
 }

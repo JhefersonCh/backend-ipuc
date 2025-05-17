@@ -242,4 +242,10 @@ export class PanelController {
   async eventsPaginatedList(@Query() query: PaginatedListEventsParamsDto) {
     return await this.panelUc.eventsPaginatedList(query);
   }
+
+  @Get('event/:id')
+  @ApiOkResponse()
+  async getEvent(@Param('id') id: string) {
+    return await this.panelUc.getEvent(id);
+  }
 }
