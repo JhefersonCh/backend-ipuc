@@ -45,7 +45,6 @@ export class SharedModule {
             password: configService.get('db.password'),
             database: configService.get('db.database'),
             entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
-            poolSize: 4,
             autoLoadEntities: true,
             extra: {
               max: 4,
