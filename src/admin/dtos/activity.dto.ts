@@ -68,15 +68,14 @@ export class CreateEventDto extends CreateActivityDto {
   activityId: string;
 
   @ApiProperty({
-    type: Date,
+    type: String,
     description: 'Fecha del evento',
-    example: '2022-01-01:00:00:00',
-    format: 'date-time',
+    example: '16/05/2025',
     required: true,
   })
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
-  date: Date;
+  date: string;
 }
 
 export class updateEvent extends CreateEventDto {
@@ -120,22 +119,20 @@ export class PaginatedListEventsParamsDto extends ParamsPaginationDto {
   description?: string;
 
   @ApiProperty({
-    type: Date,
+    type: String,
     required: false,
-    example: '2022-01-01:00:00:00',
-    format: 'date-time',
+    example: '16/05/2025',
   })
-  @IsDate()
+  @IsString()
   @IsOptional()
-  initDate?: Date;
+  initDate?: string;
 
   @ApiProperty({
-    type: Date,
+    type: String,
     required: false,
-    example: '2022-01-01:00:00:00',
-    format: 'date-time',
+    example: '16/05/2025',
   })
-  @IsDate()
+  @IsString()
   @IsOptional()
-  endDate?: Date;
+  endDate?: string;
 }
