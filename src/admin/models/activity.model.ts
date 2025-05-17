@@ -10,7 +10,7 @@ export interface EventModel {
   id?: string;
   title?: string;
   description?: string;
-  date?: Date;
+  date?: string;
   activityId?: string;
   imageUrl?: string;
   publicId?: string;
