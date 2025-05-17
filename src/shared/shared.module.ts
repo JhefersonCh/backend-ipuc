@@ -46,6 +46,7 @@ export class SharedModule {
             database: configService.get('db.database'),
             entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
             autoLoadEntities: true,
+            poolSize: 4,
             extra: {
               max: 4,
               idleTimeoutMillis: 10000,
