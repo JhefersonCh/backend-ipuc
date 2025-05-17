@@ -87,4 +87,38 @@ export class CommentService {
       );
     }
   }
+
+  async getLastCommentsReplyForUser(id: string): Promise<{
+    replies: Comment[];
+    topLevelComments: Comment[];
+  }> {
+    try {
+      const replies = await this.commentRepository
+        .createQueryBuilder('comment')
+        .where('comment.userId = :id', { id })
+        .andWhere('comment.parentId IS NOT NULL')
+        .orderBy('comment.createdAt', 'DESC')
+        .take(5)
+        .getMany();
+
+      const topLevelComments = await this.commentRepository
+        .createQueryBuilder('comment')
+        .where('comment.userId = :id', { id })
+        .andWhere('comment.parentId IS NULL')
+        .orderBy('comment.createdAt', 'DESC')
+        .take(5)
+        .getMany();
+
+      return { replies, topLevelComments };
+    } catch (error) {
+      console.error(
+        'Error al obtener los últimos comentarios del usuario:',
+        error,
+      );
+      throw new HttpException(
+        'Error al obtener los últimos comentarios del usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

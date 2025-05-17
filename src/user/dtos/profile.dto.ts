@@ -1,9 +1,16 @@
+import { Post } from './../../shared/entities/post.entity';
+import { Comment } from './../../shared/entities/comment.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseResponseDto } from './../../shared/dtos/response.dto';
 import { HttpStatus } from '@nestjs/common';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export interface StatisticsDto {
+  lastPosts: Post[];
+  lastComments: {
+    replies: Comment[];
+    topLevelComments: Comment[];
+  };
   comments: {
     total: number;
   };

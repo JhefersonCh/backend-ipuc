@@ -17,12 +17,19 @@ export class ProfileService {
   ) {}
 
   async getStatistics(id: string): Promise<StatisticsDto> {
+    const lastComments =
+      await this._commentService.getLastCommentsReplyForUser(id);
+
     const comments = await this._commentService.getCommentsCountForUser(id);
 
     const likes = await this._likeService.getLikesCountForUser(id);
 
     const posts = await this._postService.getPostsCountForUser(id);
+
+    const lastPosts = await this._postService.getLastPostsForUser(id);
     return {
+      lastPosts,
+      lastComments,
       comments,
       likes,
       posts,

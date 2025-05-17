@@ -1,3 +1,4 @@
+import { Post } from './../../shared/entities/post.entity';
 import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
 import { UserService } from './../../user/services/user/user.service';
@@ -305,6 +306,25 @@ export class PostService {
       console.error('Error al obtener el conteo de posts:', error);
       throw new HttpException(
         'Error al obtener el conteo de publicaciones del usuario.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async getLastPostsForUser(id: string): Promise<Post[]> {
+    try {
+      const posts = await this.postRepository
+        .createQueryBuilder('post')
+        .where('post.userId = :id', { id })
+        .orderBy('post.createdAt', 'DESC')
+        .take(5)
+        .getMany();
+
+      return posts;
+    } catch (error) {
+      console.error('Error al obtener los últimos posts del usuario:', error);
+      throw new HttpException(
+        'Error al obtener los últimos posts del usuario.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

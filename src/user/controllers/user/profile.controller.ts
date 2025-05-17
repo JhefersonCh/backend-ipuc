@@ -11,7 +11,7 @@ export class ProfileController {
 
   @Get('/statistics')
   @ApiOkResponse({
-    description: 'Retorna as estatísticas do usuário',
+    description: 'Retorna las estatísticas do ususario',
     type: StatisticsResponseDto,
   })
   @ApiBearerAuth()
