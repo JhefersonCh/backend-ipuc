@@ -47,6 +47,7 @@ export class SharedModule {
             entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
             autoLoadEntities: true,
             poolSize: 4,
+            synchronize: false,
             extra: {
               max: 4,
               idleTimeoutMillis: 10000,
