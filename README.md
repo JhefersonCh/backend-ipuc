@@ -18,3 +18,6 @@ Este es el backend de la página web de la **Iglesia Pentecostal Unida de Colomb
 - Foro de preguntas y comentarios
 - Envío de correos automáticos (confirmación, recuperación, etc)
 - CRUD completo para publicaciones, perfiles, foros, etc.
+
+
+Redeploy 17-05-2025
