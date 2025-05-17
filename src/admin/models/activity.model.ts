@@ -5,3 +5,13 @@ export interface ActivityModel {
   imageUrl: string;
   publicId: string;
 }
+
+export interface EventModel {
+  id?: string;
+  title?: string;
+  description?: string;
+  date?: Date;
+  activityId?: string;
+  imageUrl?: string;
+  publicId?: string;
+}

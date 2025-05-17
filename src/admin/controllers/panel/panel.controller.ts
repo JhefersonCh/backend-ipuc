@@ -1,9 +1,14 @@
+import {
+  CreateActivityDto,
+  CreateEventDto,
+  PaginatedListEventsParamsDto,
+  updateActivity,
+  updateEvent,
+} from './../../dtos/activity.dto';
 import { Roles } from './../../../shared/decorators/roles.decorator';
 import { RolesGuard } from './../../../shared/guards/roles.guard';
 import {
-  CreateActivityDto,
   updateAbout,
-  updateActivity,
   updateGeneralInfo,
   updateHome,
 } from './../../dtos/panel.dto';
@@ -26,6 +31,7 @@ import {
   Delete,
   Param,
   Get,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -172,5 +178,68 @@ export class PanelController {
       statusCode: HttpStatus.OK,
       message: 'Información actualizada exitosamente',
     };
+  }
+
+  @Get('events')
+  @ApiOkResponse()
+  async getEvents() {
+    const events = await this.panelUc.getEvents();
+    return {
+      statusCode: HttpStatus.OK,
+      data: events,
+    };
+  }
+
+  @Post('event/create')
+  @ApiOkResponse({ type: CreatedRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async createEvent(
+    @Body() body: CreateEventDto,
+  ): Promise<CreatedRecordResponseDto> {
+    const rowId = await this.panelUc.createEvent(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Evento creado exitosamente',
+      data: rowId,
+    };
+  }
+
+  @Patch('event/update')
+  @ApiOkResponse({ type: UpdateRecordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async updateEvent(
+    @Body() body: updateEvent,
+  ): Promise<UpdateRecordResponseDto> {
+    await this.panelUc.updateEvent(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Evento actualizado exitosamente',
+    };
+  }
+
+  @Delete('event/delete/:id')
+  @ApiOkResponse({ type: DeleteReCordResponseDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedResponseDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Roles('admin')
+  async deleteEvent(@Param('id') id: string): Promise<DeleteReCordResponseDto> {
+    await this.panelUc.deleteEvent(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Evento eliminado exitosamente',
+    };
+  }
+
+  @Get('events/paginated-list')
+  @ApiOkResponse()
+  async eventsPaginatedList(@Query() query: PaginatedListEventsParamsDto) {
+    return await this.panelUc.eventsPaginatedList(query);
   }
 }

@@ -12,12 +12,12 @@ export class PostUseCase {
     return await this.postService.create(createPostDto);
   }
 
-  async update(updatePostDto: PostModel) {
-    return await this.postService.update(updatePostDto);
+  async update(updatePostDto: PostModel, role?: string) {
+    return await this.postService.update(updatePostDto, role);
   }
 
-  async delete(id: string, userId: string) {
-    return await this.postService.delete(id, userId);
+  async delete(id: string, userId: string, role?: string) {
+    return await this.postService.delete(id, userId, role);
   }
 
   async findById(id: string, userId: string) {

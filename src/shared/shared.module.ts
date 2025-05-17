@@ -20,6 +20,8 @@ import { Post } from './entities/post.entity';
 import { Like } from './entities/like.entity';
 import { FilesController } from './controllers/files.controller';
 import { B2Service } from './services/b2.service';
+import { Event } from './entities/event.entity';
+import { Activity } from './entities/activity.entity';
 
 @Module({})
 export class SharedModule {
@@ -47,7 +49,7 @@ export class SharedModule {
           }),
         }),
         PassportModule,
-        TypeOrmModule.forFeature([User, Post, Like, Comment]),
+        TypeOrmModule.forFeature([User, Post, Like, Comment, Event]),
         JwtModule.registerAsync({
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({

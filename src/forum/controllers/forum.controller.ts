@@ -77,11 +77,14 @@ export class ForumController {
     @Body() updatePostDto: UpdatePostDto,
     @Req() req,
   ): Promise<UpdateRecordResponseDto> {
-    await this.postUseCase.update({
-      ...updatePostDto,
-      id,
-      userId: req.user.id,
-    });
+    await this.postUseCase.update(
+      {
+        ...updatePostDto,
+        id,
+        userId: req.user.id,
+      },
+      req.user.role,
+    );
     return {
       statusCode: HttpStatus.OK,
       message: 'Post actualizado correctamente',
@@ -97,7 +100,7 @@ export class ForumController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<DeleteReCordResponseDto> {
-    await this.postUseCase.delete(id, req.user.id);
+    await this.postUseCase.delete(id, req.user.id, req.user.role);
     return {
       statusCode: HttpStatus.OK,
       message: 'Post eliminado correctamente',

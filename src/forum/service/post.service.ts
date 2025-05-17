@@ -20,23 +20,23 @@ export class PostService {
     return { rowId: res.id };
   }
 
-  async update(updatePostDto: PostModel): Promise<void> {
+  async update(updatePostDto: PostModel, role?: string): Promise<void> {
     await this.userService.findOne(updatePostDto.userId);
-    await this.userIsCreator(updatePostDto.id, updatePostDto.userId);
+    await this.userIsCreator(updatePostDto.id, updatePostDto.userId, role);
     await this.postRepository.save(updatePostDto);
   }
 
-  async delete(id: string, userId: string) {
+  async delete(id: string, userId: string, role?: string) {
     await this.userService.findOne(userId);
-    await this.userIsCreator(id, userId);
+    await this.userIsCreator(id, userId, role);
     await this.postRepository.delete(id);
   }
 
-  async userIsCreator(postId: string, userId: string) {
+  async userIsCreator(postId: string, userId: string, role?: string) {
     const post = await this.postRepository.findOne({
       where: { id: postId, userId },
     });
-    if (!post) {
+    if (!post && role !== 'admin') {
       throw new HttpException(
         'El post no existe o no eres el creador',
         HttpStatus.NOT_FOUND,

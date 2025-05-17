@@ -1,3 +1,4 @@
+import { EventRepository } from './../shared/repositories/event.repository';
 import { UserRepository } from './../shared/repositories/user.repository';
 import { ConfigurationRepository } from './../shared/repositories/configuration.repository';
 import { Configuration } from './../shared/entities/configuration.entity';
@@ -31,6 +32,7 @@ import { UserUC } from './uc/user.uc';
     UserService,
     UserUC,
     UserRepository,
+    EventRepository,
   ],
 })
 export class AdminModule {}
