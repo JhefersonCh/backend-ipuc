@@ -1,13 +1,16 @@
+import { PasswordService } from './password.service';
+import { UserRepository } from './../../../shared/repositories/user.repository';
 import { PostService } from './../../../forum/service/post.service';
 import { LikeService } from './../../../forum/service/like.service';
 import { CommentService } from './../../../forum/service/comment.service';
 import { StatisticsDto } from './../../dtos/profile.dto';
-
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ProfileService {
   constructor(
+    private readonly _userRepository: UserRepository,
+    private readonly _passwordService: PasswordService,
     private readonly _commentService: CommentService,
     private readonly _likeService: LikeService,
     private readonly _postService: PostService,

@@ -1,3 +1,4 @@
+import { PasswordService } from './../user/services/user/password.service';
 import { CommentRepository } from './../shared/repositories/comment.repository';
 import { LikeRepository } from './../shared/repositories/like.repository';
 import { SharedModule } from 'src/shared/shared.module';
@@ -30,6 +31,7 @@ import { CommentService } from './service/comment.service';
     LikeService,
     LikeRepository,
     UserService,
+    PasswordService,
     UserRepository,
     CommentService,
     CommentUseCase,

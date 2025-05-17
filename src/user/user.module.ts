@@ -1,3 +1,4 @@
+import { PasswordService } from './services/user/password.service';
 import { PostRepository } from './../shared/repositories/post.respository';
 import { LikeRepository } from './../shared/repositories/like.repository';
 import { CommentRepository } from './../shared/repositories/comment.repository';
@@ -29,6 +30,7 @@ import { PassportModule } from '@nestjs/passport';
     ProfileService,
     ProfileUseCase,
     CommentService,
+    PasswordService,
     CommentRepository,
     LikeService,
     LikeRepository,

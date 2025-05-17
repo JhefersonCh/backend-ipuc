@@ -1,4 +1,10 @@
-import { RefreshTokenBodyDto, SignOutBodyDto } from './../../dtos/auth.dto';
+import { MailTemplateService } from './../../../shared/services/mail-template.service';
+import { MailsService } from './../../../shared/services/mails.service';
+import {
+  RecoveryPasswordBodyDto,
+  RefreshTokenBodyDto,
+  SignOutBodyDto,
+} from './../../dtos/auth.dto';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   TokenPayloadModel,
@@ -6,12 +12,7 @@ import {
 } from '../../models/authentication.model';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './../../../user/services/user/user.service';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/shared/repositories/user.repository';
@@ -23,6 +24,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
+    private readonly mailService: MailsService,
+    private readonly mailTemplateService: MailTemplateService,
   ) {}
 
   async signIn(credentials: Partial<UserAuthModel>) {
@@ -118,5 +121,31 @@ export class AuthService {
 
   async signOut(body: SignOutBodyDto) {
     return;
+  }
+
+  async recoveryPassword(body: RecoveryPasswordBodyDto) {
+    const user = await this.usersService.findOneByParams(
+      {
+        where: { email: body.email },
+      },
+      false,
+      false,
+    );
+
+    if (!user) {
+      return;
+    }
+    const token: string = await this.usersService.generateResetToken(user.id);
+    if (user) {
+      await this.mailService.sendEmail({
+        to: user.email,
+        subject: 'Recuperación de contraseña',
+        body: this.mailTemplateService.recoveryPasswordTemplate(
+          `https://ipuc-cuarta-test.netlify.app/auth/${user.id}/change-password`,
+          user.firstName,
+          token,
+        ),
+      });
+    }
   }
 }

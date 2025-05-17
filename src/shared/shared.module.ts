@@ -1,3 +1,7 @@
+import { MailsService } from './services/mails.service';
+import { MailTemplateService } from './services/mail-template.service';
+import { MailerGeneratorService } from './services/mailerGenerator.service';
+import { PasswordService } from './../user/services/user/password.service';
 import { PostRepository } from './repositories/post.respository';
 import { LikeRepository } from './repositories/like.repository';
 import { CommentRepository } from './repositories/comment.repository';
@@ -20,6 +24,7 @@ import { Post } from './entities/post.entity';
 import { Like } from './entities/like.entity';
 import { FilesController } from './controllers/files.controller';
 import { B2Service } from './services/b2.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Event } from './entities/event.entity';
 import { Activity } from './entities/activity.entity';
 
@@ -60,6 +65,22 @@ export class SharedModule {
         PassportModule.register({
           defaultStrategy: 'jwt',
         }),
+        MailerModule.forRootAsync({
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => ({
+            transport: {
+              host: configService.get<string>('mail.host'),
+              port: configService.get<number>('mail.port'),
+              secure: configService.get<boolean>('mail.secure'),
+              auth: {
+                user: configService.get<string>('mail.user'),
+                pass: configService.get<string>('mail.password'),
+              },
+              sender: configService.get<string>('mail.sender'),
+              to: configService.get<string>('mail.to'),
+            },
+          }),
+        }),
       ],
       providers: [
         UserRepository,
@@ -69,6 +90,10 @@ export class SharedModule {
         B2Service,
         ProfileService,
         CommentService,
+        PasswordService,
+        MailerGeneratorService,
+        MailTemplateService,
+        MailsService,
         CommentRepository,
         LikeService,
         LikeRepository,
