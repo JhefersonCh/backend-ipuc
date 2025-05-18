@@ -1,4 +1,3 @@
-import { Post } from './../../shared/entities/post.entity';
 import { PageMetaDto } from './../../shared/dtos/pageMeta.dto';
 import { ResponsePaginationDto } from './../../shared/dtos/pagination.dto';
 import { UserService } from './../../user/services/user/user.service';
@@ -311,16 +310,44 @@ export class PostService {
     }
   }
 
-  async getLastPostsForUser(id: string): Promise<Post[]> {
+  async getLastPostsForUser(id: string) {
     try {
       const posts = await this.postRepository
+
         .createQueryBuilder('post')
+        .select([
+          'post',
+          'COUNT(DISTINCT comments.id) as commentscount',
+          'COUNT(DISTINCT likes.id) as likescount',
+          `CASE
+            WHEN EXISTS (
+              SELECT 1 FROM "Like" l WHERE l."postId" = post.id AND l."userId" = :userId
+            ) THEN true
+            ELSE false
+          END as hasLiked`,
+        ])
+        .setParameter('userId', id)
+        .leftJoin('post.comments', 'comments')
+        .leftJoin('post.likes', 'likes')
         .where('post.userId = :id', { id })
         .orderBy('post.createdAt', 'DESC')
         .take(5)
-        .getMany();
+        .groupBy('post.id')
+        .getRawMany();
 
-      return posts;
+      const entities = posts.map((post) => ({
+        id: post.post_id,
+        title: post.post_title,
+        description: post.post_description,
+        commentsCount: Number(post.commentscount) || 0,
+        likesCount: Number(post.likescount) || 0,
+        hasLiked: post.hasliked === true || post.hasliked === 'true',
+        createdAt: post.post_createdAt,
+        updatedAt: post.post_updatedAt,
+        userId: post.post_userId,
+      }));
+
+      return entities;
     } catch (error) {
       console.error('Error al obtener los últimos posts del usuario:', error);
       throw new HttpException(
