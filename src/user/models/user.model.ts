@@ -5,6 +5,7 @@ export interface UserModel {
   role?: string;
   email: string;
   username: string;
+  avatarUrl?: string;
   password?: string;
   confirmPassword?: string;
 }
