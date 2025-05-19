@@ -58,6 +58,15 @@ export class BaseUserDto {
   avatarUrl?: string;
 
   @ApiProperty({
+    type: String,
+    required: false,
+    example: 'publicId',
+  })
+  @IsOptional()
+  @IsString()
+  publicId?: string;
+
+  @ApiProperty({
     example: '123456',
   })
   @IsString()
@@ -144,6 +153,15 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   avatarUrl?: string;
+
+  @ApiProperty({
+    type: String,
+    required: false,
+    example: 'www.example.com',
+  })
+  @IsString()
+  @IsOptional()
+  publicId?: string;
 
   @ApiProperty({
     example: 'Jheff',

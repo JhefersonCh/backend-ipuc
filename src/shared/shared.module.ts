@@ -26,7 +26,6 @@ import { FilesController } from './controllers/files.controller';
 import { B2Service } from './services/b2.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Event } from './entities/event.entity';
-import { Activity } from './entities/activity.entity';
 
 @Module({})
 export class SharedModule {
