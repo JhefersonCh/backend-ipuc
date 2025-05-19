@@ -96,6 +96,7 @@ export class CommentService {
         .createQueryBuilder('comment')
         .innerJoinAndSelect('comment.user', 'user')
         .innerJoinAndSelect('comment.replies', 'reply')
+        .innerJoinAndSelect('reply.user', 'replyUser')
         .where('comment.userId = :id', { id })
         .andWhere('comment.parentId IS NULL')
         .orderBy('comment.createdAt', 'DESC')
