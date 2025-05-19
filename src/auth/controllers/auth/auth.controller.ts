@@ -59,7 +59,11 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   async signOut(@Body() body: SignOutBodyDto) {
-    return await this.authUC.signOut(body);
+    await this.authUC.signOut(body);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Sesión cerrada correctamente',
+    };
   }
 
   @Post('/recovery-password')
