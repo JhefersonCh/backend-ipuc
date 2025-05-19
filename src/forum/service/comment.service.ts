@@ -89,29 +89,20 @@ export class CommentService {
   }
 
   async getLastCommentsReplyForUser(id: string): Promise<{
-    replies: Comment[];
     topLevelComments: Comment[];
   }> {
     try {
-      const replies = await this.commentRepository
-        .createQueryBuilder('comment')
-        .innerJoinAndSelect('comment.user', 'user')
-        .where('comment.userId = :id', { id })
-        .andWhere('comment.parentId IS NOT NULL')
-        .orderBy('comment.createdAt', 'DESC')
-        .take(5)
-        .getMany();
-
       const topLevelComments = await this.commentRepository
         .createQueryBuilder('comment')
         .innerJoinAndSelect('comment.user', 'user')
+        .innerJoinAndSelect('comment.replies', 'reply')
         .where('comment.userId = :id', { id })
         .andWhere('comment.parentId IS NULL')
         .orderBy('comment.createdAt', 'DESC')
         .take(5)
         .getMany();
 
-      return { replies, topLevelComments };
+      return { topLevelComments };
     } catch (error) {
       console.error(
         'Error al obtener los últimos comentarios del usuario:',

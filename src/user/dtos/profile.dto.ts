@@ -7,7 +7,6 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export interface StatisticsDto {
   lastPosts: any[];
   lastComments: {
-    replies: Comment[];
     topLevelComments: Comment[];
   };
   comments: {
