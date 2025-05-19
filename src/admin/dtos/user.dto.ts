@@ -118,7 +118,7 @@ export class CreateUserDto {
   password?: string;
 }
 
-export class UpdateUserDto extends CreateUserDto {
+export class UpdateUserPanelDto extends CreateUserDto {
   @ApiProperty({
     type: String,
     example: 'id del usuario',

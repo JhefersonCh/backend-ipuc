@@ -3,7 +3,7 @@ import { UserService } from '../services/user.service';
 import {
   CreateUserDto,
   PaginatedListUsersParamsDto,
-  UpdateUserDto,
+  UpdateUserPanelDto,
 } from '../dtos/user.dto';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class UserUC {
     return await this.userService.findById(id);
   }
 
-  async updateUser(id: string, body: UpdateUserDto) {
+  async updateUser(id: string, body: UpdateUserPanelDto) {
     return await this.userService.update(id, body);
   }
 

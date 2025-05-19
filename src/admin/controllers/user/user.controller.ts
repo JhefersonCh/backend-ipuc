@@ -7,7 +7,7 @@ import {
   CreateUserDto,
   GetUserResponseDto,
   PaginatedListUsersParamsDto,
-  UpdateUserDto,
+  UpdateUserPanelDto,
 } from './../../dtos/user.dto';
 import {
   CreatedRecordResponseDto,
@@ -79,7 +79,7 @@ export class UserController {
   @Roles('admin')
   async updateUser(
     @Param('id') id: string,
-    @Body() body: UpdateUserDto,
+    @Body() body: UpdateUserPanelDto,
   ): Promise<UpdateRecordResponseDto> {
     await this.userUC.updateUser(id, body);
     return {
