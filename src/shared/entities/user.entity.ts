@@ -57,6 +57,12 @@ export class User {
   })
   avatarUrl?: string;
 
+  @Column('varchar', {
+    length: 100,
+    nullable: true,
+  })
+  publicId?: string;
+
   @CreateDateColumn({
     type: 'timestamp',
   })
