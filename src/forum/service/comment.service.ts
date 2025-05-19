@@ -95,6 +95,7 @@ export class CommentService {
     try {
       const replies = await this.commentRepository
         .createQueryBuilder('comment')
+        .innerJoinAndSelect('comment.user', 'user')
         .where('comment.userId = :id', { id })
         .andWhere('comment.parentId IS NOT NULL')
         .orderBy('comment.createdAt', 'DESC')
@@ -103,6 +104,7 @@ export class CommentService {
 
       const topLevelComments = await this.commentRepository
         .createQueryBuilder('comment')
+        .innerJoinAndSelect('comment.user', 'user')
         .where('comment.userId = :id', { id })
         .andWhere('comment.parentId IS NULL')
         .orderBy('comment.createdAt', 'DESC')
