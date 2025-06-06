@@ -56,10 +56,41 @@ export class PanelService {
   }
 
   async updateConfiguration(configuration: Partial<ConfigurationModel>) {
+    const existingConfiguration = await this.configurationRepository.findOne({
+      where: { id: 1 },
+    });
+    if (!existingConfiguration) {
+      return await this.configurationRepository.insert({
+        ...this.defaultConfiguration(),
+        ...configuration,
+        id: 1,
+      });
+    }
     return await this.configurationRepository.update(
       { id: 1 },
       { ...configuration, id: 1 },
     );
+  }
+
+  defaultConfiguration() {
+    return {
+      heroUrl: '',
+      heroPublicId: '',
+      title: '',
+      description: '',
+      name: '',
+      additionalTitle: '',
+      additionalDescription: '',
+      enableRedirectToIpuc: false,
+      mission: '',
+      vision: '',
+      ubicationUrl: '',
+      ubicationCoordinates: '',
+      enableRedirectToGoogleMaps: false,
+      appName: '',
+      logoUrl: '',
+      logoPublicId: '',
+    };
   }
 
   async getAbout() {
