@@ -43,7 +43,7 @@ export class SharedModule {
             username: configService.get('db.user'),
             password: configService.get('db.password'),
             database: configService.get('db.database'),
-            entities: [__dirname + '/src/**/*.entity{.ts,.js}'],
+            entities: [__dirname + '/src//*.entity{.ts,.js}'],
             autoLoadEntities: true,
             poolSize: 4,
             synchronize: false,
@@ -52,6 +52,9 @@ export class SharedModule {
               idleTimeoutMillis: 10000,
               idleInPoolTimeoutMillis: 10000,
               connectionTimeoutMillis: 2000,
+            },
+            ssl: {
+              rejectUnauthorized: false,
             },
           }),
         }),

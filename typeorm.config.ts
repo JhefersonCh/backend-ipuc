@@ -17,4 +17,7 @@ module.exports = new DataSource({
     idleTimeoutMillis: 10000,
     idleInPoolTimeoutMillis: 10000,
   },
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
